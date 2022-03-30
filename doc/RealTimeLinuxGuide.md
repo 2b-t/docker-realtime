@@ -49,4 +49,4 @@ The dispute on which of two approaches is faster has not been completely settled
 "I figured out that most of the time PREEMPT_RT was poorly configured. So we brought in both a Xenomai expert and a PREEMPT_RT expert, and let them configure their own  platforms.”
 ```
 
-[Their tests](https://www.youtube.com/watch?v=BKkX9WASfpI)) showed that the maximum thread wakeup time was of similar magnitude while the average was slightly slower when comparing real-world scenarios in userspace.
+[Their tests](https://www.youtube.com/watch?v=BKkX9WASfpI) showed that the maximum thread wakeup time was of similar magnitude while the average was slightly slower when comparing real-world scenarios in userspace.
