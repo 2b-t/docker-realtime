@@ -35,6 +35,8 @@ Jump to section 2.1.3 and 2.1.4 and then try to reboot. In case it does not work
 
 The re-compilation of the kernel is described in the [official Ubuntu installation guide](https://help.ubuntu.com/lts/installation-guide/amd64/install.en.pdf#page=98) but [might depend on the precise version](https://stackoverflow.com/a/51709420). Furthermore I ran into several issues which required me to change several parameters before compiling the kernel. These are described in more detail below but in case you can refer to [this](https://askubuntu.com/a/1338150) and [this](https://askubuntu.com/a/1329625) post for more details.
 
+The installation procedure can be simplified with the script `/patch_kernel_preemptrt.sh`! A more detailed description on how to use it will follow.
+
 Start by installing the Debian packages required for the re-compilation
 
 ```shell

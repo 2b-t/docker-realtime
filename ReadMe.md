@@ -20,7 +20,7 @@ As outlined in the document linked above `PREEMPT_RT` is likely the most future-
 
 ### 2.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`/doc/InstallPreemptRt.md`](./doc/InstallPreemptRt.md).
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`/doc/InstallPreemptRt.md`](./doc/InstallPreemptRt.md). The same procedure can also be performed with the script [`/patch_kernel_preemptrt.sh`](./patch_kernel_preemptrt.sh).
 
 ### 2.3 Launching the Docker
 
