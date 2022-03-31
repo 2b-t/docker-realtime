@@ -48,7 +48,7 @@ function select_preemptrt_full_version {
 # Reconstruct the corresponding kernel major version
 function reconstruct_kernel_major_version {
   local KERNEL_MAJOR_VERSION=$(echo "${PREEMPT_RT_VER}" | grep -o -P '^\s*(\d)+')
-  echo "v$KERNEL_MAJOR_VERSION$(curl -Ls https://www.kernel.org/pub/linux/kernel | grep -o -P "(?<=href\=\"v$KERNEL_MAJOR_VERSION).*(?=/\">)")"
+  echo "$(curl -Ls https://www.kernel.org/pub/linux/kernel | grep -o -P "(?<=href\=\")(v$KERNEL_MAJOR_VERSION.*)(?=/\">)")"
 }
 
 # Download and extract the vanilla kernel

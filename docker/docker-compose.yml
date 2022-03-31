@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  docker_realtime:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    tty: true
+    privileged: true
+    network_mode: host
+
