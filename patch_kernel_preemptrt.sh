@@ -127,7 +127,6 @@ function select_installation_mode {
 # Generate a debian package for easier installation
 function generate_preemptrt_kernel_debian_package {
   echo "Generating Debian package..."
-  make-kpkg clean
   fakeroot make-kpkg -j$(nproc) --initrd --revision=1.0.custom kernel_image
 }
 
