@@ -6,7 +6,7 @@
 # Install required dependencies
 function install_dependencies {
   echo "Installing dependencies..."
-  sudo apt-get install -y grep curl
+  sudo apt-get install -y grep curl sed
   sudo apt-get install -y build-essential bc ca-certificates gnupg2 libssl-dev lsb-release libelf-dev bison flex dwarves zstd libncurses-dev fakeroot kernel-package linux-source equivs gcc dpkg-dev
   echo "Dependencies installed successfully!"
 }
