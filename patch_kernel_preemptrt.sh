@@ -106,12 +106,7 @@ function generate_new_kernel_configuration {
 # @param $2 its desired value
 function find_and_replace_in_config {
   local CONFIG_FILE=".config"
-  {
-    sed -i "s/$1=.*/$1=$2/" $CONFIG_FILE;
-  } ||
-  {
-    echo $1"="$2 >> $CONFIG_FILE
-  }
+  grep -E "$1=" $CONFIG_FILE && sed -i "s/$1=.*/$1=$2/" $CONFIG_FILE || echo $1"="$2 >> $CONFIG_FILE
 }
 
 # Unsign the kernel configuration
