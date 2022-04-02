@@ -6,7 +6,7 @@ Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
 
 ## 1. Control groups with `PREEMPT`
 
-As already pointed out in [`/realtime_basics/ControlGroups.md`](../realtime_basics/ControlGroups.md) real-time groups require the kernel flag `CONFIG_RT_GROUP_SCHED` and therefore you will likely have to recompile your kernel. Follow the installation in that guide before continuing.
+As already pointed out in [`realtime_basics/ControlGroups.md`](../realtime_basics/ControlGroups.md) real-time groups require the kernel flag `CONFIG_RT_GROUP_SCHED` and therefore you will likely have to recompile your kernel. Follow the installation in that guide before continuing.
 
 Be warned: **Control groups are known to have a high amount of jitter** and are mentioned here just for completeness. They are unlikely to be sufficient for real-time robotics.
 
