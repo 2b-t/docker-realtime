@@ -99,7 +99,7 @@ function generate_preemptrt_debian_package {
 # Install PREEMPT_RT from the Debian package
 function install_preemptrt_kernel_as_debian_package {
   echo "Installing Debian package..."
-  #sudo dpkg -i ../linux-image-${PREEMPT_RT_VER_FULL}_1.0.custom_amd64.deb
+  sudo dpkg -i ../linux-image-${PREEMPT_RT_VER_FULL}_1.0.custom_amd64.deb
 }
 
 # Install the kernel directly without creating a Debian package first

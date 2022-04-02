@@ -1,0 +1,73 @@
+# ROS inside Docker
+
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+
+
+
+## 1. ROS with Docker
+
+The ROS Wiki offers tutorials on ROS and Docker [here](http://wiki.ros.org/docker/Tutorials). A list of important commands can be found [here](https://tuw-cpsg.github.io/tutorials/docker-ros/). After installing Docker one simply pulls an image of ROS, specifying the version tag:
+
+```bash
+$ sudo docker pull ros
+```
+
+gives you the latest ROS2 version whereas 
+
+```bash
+$ sudo docker pull ros:noetic-robot
+```
+
+will pull the latest version of ROS1.
+
+Finally you can run it with 
+
+```bash
+$ sudo docker run -it ros
+```
+
+(where `ros` should be replaced by the precise version tag e.g. `ros:noetic-robot`).
+
+In case of a Docker you do **not source the `/opt/ros/<distro>/setup.bash` file but instead the entrypoint script**:
+
+```bash
+$ source ros_entrypoint.sh
+```
+
+### 1.1 Folder structure
+
+I generally structure Dockers for ROS in the following way:
+
+```
+ros_ws
+├─ docker
+|  ├─ Dockerfile
+|  └─ docker-compose.yml # Context is chosen as ..
+└─ src # Only this folder is mounted into the Docker
+   ├─ .repos # Configuration file for VCS tool
+   └─ packages_as_submodules
+```
+
+Each ROS-package or a set of ROS packages are bundled together in a Git repository. These are then included as submodules in the `src` folder or by using [VCS tool](https://github.com/dirk-thomas/vcstool). Inside the `docker-compose.yml` file one then **mounts only the `src` folder as volume** so that it can be also accessed from within the container. This way the build and devel folders remain inside the Docker container and you can compile the code inside the Docker as well as outside (e.g. having two version of Ubuntu and ROS for testing).
+
+Generally I have more than a single `docker-compose.yml` as discussed in [`Gui.md`](./Gui.md) and I will add configuration folders for Visual Studio Code and a configuration for the Docker itself, as well as dedicated tasks. I usually work inside the container and install new software there first. I will keep then track of the installed software manually and add it to the Dockerfile.
+
+### 1.2 External ROS master
+
+Sometimes you want to run nodes inside the Docker and communicate with a ROS master outside of it. This can be done by adding the following **environment variables** to the `docker-compose.yml` file
+
+```bash
+ 9    environment:
+10      - ROS_MASTER_URI=http://localhost:11311
+11      - ROS_HOSTNAME=localhost
+```
+
+where in this case `localhost` stands for your local machine (the loop-back device `127.0.0.1`).
+
+If the Docker should act as the master this might be more complicated and one might have to turn to virtual networking in Linux as described [here](https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking).
+
+You can test this by sourcing the environment, launching a `roscore` on your local or remote computer, then launch the Docker source the local environment and see if you can see any topics inside `$ rostopic list`. Then you can start publishing a topic `$ rostopic pub /testing std_msgs/String "Testing..." -r 10` on one side (either Docker or host) and check if you receive the messages on the other side with `$ rostopic echo /testing`.
+
+### 1.3 Docker configurations
+
+You will find quite a few Docker configurations for ROS online, in particular [this one](https://github.com/athackst/vscode_ros2_workspace) for ROS2 is quite well made.

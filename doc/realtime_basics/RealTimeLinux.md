@@ -1,33 +1,31 @@
-# Docker real-time guide for `PREEMPT_RT`
+# Real-time Linux
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (March 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
 
 
 
-## 1. Real-time Linux
+## 1. Problems of task scheduling
 
-Task scheduling on standard operating systems is to some extend non-deterministic, meaning one cannot give a guaranteed - mathematically proovable - upper bound for the execution time.
+Task scheduling on standard operating systems is to some extend non-deterministic, meaning one cannot give a guaranteed - mathematically provable - upper bound for the execution time.
 
 But for any real-time system one wants to be able to give such an upper bound that a given task will never exceed. Rather than executing something as fast as possible the aim is to **execute tasks consistently**: What matters is the **worst case latency** rather than the average latency. There are different approaches for rendering (Linux) operating systems real-time capable. These will be discussed in the next section.
 
-### 1.1 Approaches: Dual and single kernels
+## 2. Real-time Linux: Dual and single kernel approaches
 
 When talking about real-time kernels one differentiates between single kernel approaches, like [`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start), and [dual-kernel approaches](https://linuxgizmos.com/real-time-linux-explained/), such as [Xenomai](https://en.wikipedia.org/wiki/Xenomai). You can use real-time capable Dockers in combination with all of them from what I have heard to produce  real-time capable systems but the approaches differ. Clearly this does not depend on the Docker itself but on the **underlying host system**, meaning you still have to properly configure the host system, likely re-compiling its kernel.
 
-#### 1.1.1 Dual kernels
+### 2.1 Dual kernel real-time Linux
 
 **Dual kernel** approaches predate single-kernel ones by several years. In this case a **separate real-time micro-kernel runs in parallel to the traditional Linux kernel**. The real-time code is given priority over the user space which is only allowed to run if no real-time code is executed. The following two dual-kernel approaches are commonly used:
 
 - **RTAI** (Real-time Application Interface) was developed by the Politecnico di Milano. One has to program in kernel space instead of the user space and therefore can't use the standard C libraries but instead must use special libraries that do not offer the full functionality of its standard counterparts. The interaction with the user space is handled over special interfaces, rendering programming much more difficult. New drivers for the micro-kernel have to be developed for new hardware making the code always lack slightly behind. For commercial codes also licensing might be an issue as kernel modules are generally licensed under the open-source Gnu Public License (GPL).
 - With the **Xenomai** real-time operating system it has been tried to improve the separation between kernel and user space. The programmer works in user space and then abstractions, so called skins are added that emulate different APIs (e.g. that implement a subset of Posix threads) which have to be linked against when compiling.
 
-#### 1.1.2 Single kernels
+### 2.2 Single kernel real-time Linux
 
 While having excellent real-time performance the main disadvantage of dual-kernel approaches is the inherent complexity. As [stated by Jan Altenberg](https://www.youtube.com/watch?v=BKkX9WASfpI) from the German embedded development firm [Linutronix](https://linutronix.de/), one of the main contributors behind `PREEMPT_RT`:
 
-```
-“The problem is that someone needs to maintain the microkernel and support  it on new hardware. This is a huge effort, and the development  communities are not very big. Also, because Linux is not running directly on the hardware, you need a  hardware abstraction layer (HAL). With two things to maintain, you’re  usually a step behind mainline Linux development.”
-```
+*“The problem is that someone needs to maintain the microkernel and support  it on new hardware. This is a huge effort, and the development  communities are not very big. Also, because Linux is not running directly on the hardware, you need a  hardware abstraction layer (HAL). With two things to maintain, you’re  usually a step behind mainline Linux development.”*
 
 This drawback has led to different developments trying to patch the existing Linux kernel by modifying task scheduling, so called **single-kernel** systems. The **kernel itself is adapted** to be real-time capable.
 
@@ -41,12 +39,12 @@ These can be combined with the feature of [control groups (`cgroups` for short)]
 
 **`PREEMPT_RT`** developed from `PREEMPT` and is a set of patches that aims at making the kernel fully preemptible, even in critical sections (`PREEMPT_RT_FULL`). For this purpose e.g. [spinlocks are largely replaced by mutexes](https://wiki.linuxfoundation.org/realtime/documentation/technical_details/sleeping_spinlocks). This way there is no need for kernel space programming - instead on can use the standard C and Posix threading libraries. In mid 2021 Linux lead developer Linus Torvalds [merged 70 of the outstanding 220 patches](https://linutronix.de/news/The-PREEMPT_RT-Locking-Code-Is-Merged-For-Linux-5.15) into the Linux mainline. In the near future `PREEMPT_RT` should be available by default to the Linux community without needing to patch the system, guaranteeing also the maintenance of the patch.
 
-#### 1.1.3 Performance
+### 2.3 Performance comparison
 
-The dispute on which of two approaches is faster has not been completely settled. Most of the literature claims that Xenomai is slightly faster. Jan Altenberg though claims that he could not replicate these studies:
+Which of two approaches is faster has not been completely settled and is still disputed. Most of the literature claims that Xenomai is slightly faster. Jan Altenberg though claims that he could not replicate these studies:
 
-```
-"I figured out that most of the time PREEMPT_RT was poorly configured. So we brought in both a Xenomai expert and a PREEMPT_RT expert, and let them configure their own  platforms.”
-```
+*"I figured out that most of the time PREEMPT_RT was poorly configured. So we brought in both a Xenomai expert and a PREEMPT_RT expert, and let them configure their own  platforms.”*
 
 [Their tests](https://www.youtube.com/watch?v=BKkX9WASfpI) showed that the maximum thread wakeup time was of similar magnitude while the average was slightly slower when comparing real-world scenarios in userspace.
+
+In any case I think that for most people having a slight edge on performance is not worth the additional burden of writing kernel code for most people: It just makes the code harder to develop and less portable!
