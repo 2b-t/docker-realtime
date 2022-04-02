@@ -173,6 +173,7 @@ function install_kernel_interactive {
   # Apply patch to kernel
   apply_patch_to_kernel
   generate_new_kernel_configuration
+  unsign_kernel_configuration
 
   # Choose between Debian package and installing directly
   local INSTALLATION_MODE=$(select_installation_mode)
@@ -202,6 +203,7 @@ function install_kernel_noninteractive {
   sign_kernel_and_preemptrt
   apply_patch_to_kernel
   generate_new_kernel_configuration
+  unsign_kernel_configuration
   generate_preemptrt_kernel_debian_package
   install_preemptrt_kernel_debian_package
 }
