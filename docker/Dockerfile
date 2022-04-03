@@ -11,7 +11,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     curl \
     grep \
-    sed \
     build-essential \
     make \
     libnuma-dev \
