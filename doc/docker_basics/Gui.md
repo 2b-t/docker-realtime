@@ -169,6 +169,6 @@ This way if I need to add additional options, I only have to modify the base Doc
 I can then specify which file should be launched to Docker-Compose with e.g.
 
 ```
-$ docker-compose up -f docker-compose-gui-nvidia.yml
+$ docker-compose -f docker-compose-gui-nvidia.yml up
 ```
 
