@@ -7,7 +7,7 @@
 # Install the kernel from the available pre-compiled packages online
 function main {
   sudo apt-get install -y dialog
-  sudo apt-get install -y coreutils curl grep
+  sudo apt-get install -y coreutils curl grep dpkg-dev
 
   # Select Debian version
   POSSIBLE_DEBIAN_VERSIONS=$(cat /etc/debian_version | tr / " ")
