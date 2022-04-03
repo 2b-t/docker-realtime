@@ -119,11 +119,8 @@ function comment_out_in_config {
 # Unsign the kernel configuration
 function unsign_kernel_configuration {
   echo "Forcing unsigned kernel..."
-  find_and_replace_in_config "CONFIG_MODULE_SIG" "n"
-  find_and_replace_in_config "CONFIG_MODULE_SIG_ALL" "n"
-  find_and_replace_in_config "CONFIG_MODULE_SIG_FORCE" "n"
-  find_and_replace_in_config "CONFIG_MODULE_SIG_KEY" '""'
   find_and_replace_in_config "CONFIG_SYSTEM_TRUSTED_KEYS" '""'
+  find_and_replace_in_config "CONFIG_SYSTEM_REVOCATION_KEYS" '""'
 }
 
 # Select the installation modality
@@ -134,20 +131,19 @@ function select_installation_mode {
 # Generate a debian package for easier installation
 function generate_preemptrt_kernel_debian_package {
   echo "Generating Debian package..."
-  make-kpkg clean
-  fakeroot make-kpkg -j$(nproc) --initrd --revision=1.0.custom kernel_image
+  sudo make -j$(nproc) deb-pkg
 }
 
 # Install PREEMPT_RT from the Debian package
 function install_preemptrt_kernel_debian_package {
   echo "Installing Debian package..."
-  sudo dpkg -i ../linux-image-${PREEMPT_RT_VER_FULL}_1.0.custom_$(dpkg --print-architecture).deb
+  sudo dpkg -i ../linux-image-${PREEMPT_RT_VER_FULL}_${PREEMPT_RT_VER_FULL}-1_$(dpkg --print-architecture).deb
 }
 
 # Install the kernel directly without creating a Debian package first
 function install_preemptrt_kernel_directly {
   echo "Installing in the classic way..."
-  make -j$(nproc)
+  sudo make -j$(nproc)
   sudo make modules_install -j$(nproc)
   sudo make install -j$(nproc)
 }
@@ -198,7 +194,7 @@ function install_kernel_noninteractive {
   local PREEMPT_RT_VER_FULL=$1 # e.g. 5.10.78-rt55
   local KERNEL_VER_FULL=$(echo "${PREEMPT_RT_VER_FULL}" | sed 's/-rt.*//g') # e.g. 5.10.78
   local PREEMPT_RT_VER=$(echo "${KERNEL_VER_FULL}" | sed 's/\.[^\.]*//2g') # e.g. 5.10
-  local KERNEL_VER="v"$(echo "${PREEMPT_RT_VER_FULL}" | sed -n 's/\(.*\)[.]\(.*\)/\1.x/p') #e.g. v5.x
+  local KERNEL_VER="v"$(echo "${PREEMPT_RT_VER}" | sed -n 's/\(.*\)[.]\(.*\)/\1.x/p') # e.g. v5.x
 
   download_and_extract_kernel
   download_and_extract_preemptrt

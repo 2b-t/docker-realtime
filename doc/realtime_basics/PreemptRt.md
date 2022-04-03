@@ -47,7 +47,7 @@ Then have a look at [this webpage](https://mirrors.edge.kernel.org/pub/linux/ker
 $ PREEMPT_RT_VER_FULL="5.10.78-rt55" # Modify the patch version here (e.g. 5.10.78-rt55)
 $ KERNEL_VER_FULL=$(echo "${PREEMPT_RT_VER_FULL}" | sed 's/-rt.*//g') # e.g. 5.10.78
 $ PREEMPT_RT_VER=$(echo "${KERNEL_VER_FULL}" | sed 's/\.[^\.]*//2g') # e.g. 5.10
-$ KERNEL_VER=$(echo "${PREEMPT_RT_VER}" | sed -n 's/\(.*\)[.]\(.*\)[.]\(.*\)/\1.x/p') #e.g. 5.x
+$ KERNEL_VER="v"$(echo "${PREEMPT_RT_VER}" | sed -n 's/\(.*\)[.]\(.*\)/\1.x/p') # e.g. v5.x
 ```
 
 The lines above will create several variables that will be handy in the next steps. If the lines fail, print the values of the variables with `$ echo ${PATCH_VER_FULL}` and then make sure that the following links exist on the [server](https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/).
@@ -100,11 +100,18 @@ Go ahead and **change the relevant configuration parameters** if you want to. Th
 
 ```shell
 # Find and replace
+CONFIG_SYSTEM_TRUSTED_KEYS=""
+CONFIG_SYSTEM_REVOCATION_KEYS=""
+```
+
+potentially also
+
+```shell
 CONFIG_MODULE_SIG=n
 CONFIG_MODULE_SIG_ALL=n
 CONFIG_MODULE_SIG_FORCE=n
 CONFIG_MODULE_SIG_KEY=""
-CONFIG_SYSTEM_TRUSTED_KEYS=""
+CONFIG_X86_X32=""
 ```
 
 Now it is time to build the kernel:
@@ -112,27 +119,26 @@ Now it is time to build the kernel:
 - If you want to build a **Debian package** (recommended) then perform:
 
   ```shell
-  $ make-kpkg clean # Optional to remove old relicts (from previously failed compilations)
+  $ make clean # Optional to remove old relicts (from previously failed compilations)
   # The following command might take very long!
-  $ fakeroot make-kpkg -j$(nproc) --initrd --revision=1.0.custom kernel_image
-  $ sudo dpkg -i ../linux-image-${PREEMPT_RT_VER_FULL}_1.0.custom_amd64.deb
+  $ sudo make -j$(nproc) deb-pkg
   ```
-
+  
   where the [`revision` parameter is just for keeping track of the version number of your kernel builds](https://www.debian.org/releases/wheezy/amd64/ch08s06.html.en) and can be changed at will, similarly for the `custom` word.
-
+  
   In case you want to remove it again later on this can be easily done with:
-
+  
   ```shell
-  $ PREEMPT_RT_VER_FULL="5.10.78-rt55" #Modify the kernel version here
+  $ PREEMPT_RT_VER_FULL="5.10.78-rt55" # Modify the kernel version here
   $ sudo dpkg -r linux-image-${PREEMPT_RT_VER_FULL}
   ```
-
+  
   The advantage of the Debian package is that you can distribute and remove it more easily than the direct installation. 
-
+  
 - Alternatively you can build and **install it directly** without creating a Debian package first
 
   ```shell
-  $ make -j$(nproc)
+  $ sudo make -j$(nproc)
   $ sudo make modules_install -j$(nproc)
   $ sudo make install -j$(nproc)
   ```
