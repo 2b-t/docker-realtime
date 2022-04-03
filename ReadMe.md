@@ -35,7 +35,7 @@ The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics
 
 The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh).
 
-[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and let's you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it.
+[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it.
 
 #### 1.1.1 Installation from pre-compiled Debian package (recommended)
 
