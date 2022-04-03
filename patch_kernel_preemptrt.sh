@@ -109,6 +109,13 @@ function find_and_replace_in_config {
   grep -E "$1=" $CONFIG_FILE && sed -i "s/$1=.*/$1=$2/" $CONFIG_FILE || echo $1"="$2 >> $CONFIG_FILE
 }
 
+# Function for commenting out certain settings in the configuration files
+# @param $1 The name of the setting to be commented out
+function comment_out_in_config {
+  local CONFIG_FILE=".config"
+  sed -E "/$1/ s/^#*/#/" -i $CONFIG_FILE
+}
+
 # Unsign the kernel configuration
 function unsign_kernel_configuration {
   echo "Forcing unsigned kernel..."
@@ -127,6 +134,7 @@ function select_installation_mode {
 # Generate a debian package for easier installation
 function generate_preemptrt_kernel_debian_package {
   echo "Generating Debian package..."
+  make-kpkg clean
   fakeroot make-kpkg -j$(nproc) --initrd --revision=1.0.custom kernel_image
 }
 
