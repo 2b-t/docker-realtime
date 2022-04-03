@@ -1,6 +1,6 @@
 # Docker real-time guide for `PREEMPT_RT`
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (March - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
 
 
 
@@ -12,7 +12,7 @@ The proposed solution simply consists in having a **[`PREEMPT_RT`](https://wiki.
 
 - It provies a brief [introduction into development with Docker](./doc/docker_basics/introduction.md) as well as Docker-Compose generally and how you can [set it up in *Visual Studio Code*](./doc/docker_basics/VisualStudioCodeSetup.md), including a guide on how to use [*graphic user interfaces with Docker*](./doc/docker_basics/Gui.md) and tips on how to structure a [ROS workspace](./doc/docker_basics/Ros.md) with it.
 - Give an [*overview of different real-time Linux approaches*](./doc/realtime_basics/RealTimeLinux.md), their advantages and disadvantages
-- Walk you through the [*installation of `PREEMPT_RT`*](./doc/realtime_basics/PreemptRt.md) and supply a simple [*script for automatically re-compiling the kernel*](./patch_kernel_preemptrt.sh)
+- Walk you through the [*installation of `PREEMPT_RT`*](./doc/realtime_basics/PreemptRt.md) and supply a simple [*script for automatically re-compiling the kernel*](./compile_kernel_preemptrt.sh)
 - Discusses [*control groups*](./doc/docker_realtime/ControlGroups.md), another common approach for real-time Linux and how to get it up and running with Docker
 - *Benchmarking your real-time performance* by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
 
@@ -33,7 +33,25 @@ The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics
 
 ### 1.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided script [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh). You can launch it in two different ways:
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh).
+
+[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and let's you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it.
+
+#### 1.1.1 Installation from pre-compiled Debian package (recommended)
+
+Start of by launching [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and follow the installation instructions
+
+```shell
+$ ./install_debian_preemptrt.sh
+```
+
+Afterwards you can reboot your system (be sure to select the correct kernel!) and should already be ready to go. You can check the kernel version with `$ uname -r` to verify that you are using the correct kernel and the installation was indeed successful.
+
+#### 1.1.2 Compilation of the kernel
+
+If the installation above fails or for some good reason you have to compile the kernel yourself you can use the [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) script.
+
+You can launch it in two different ways:
 
 ```shell
 $ ./compile_kernel_preemptrt.sh
@@ -47,7 +65,7 @@ If you supply a correct real-time patch version from the list of available ones 
 $ sudo ./compile_kernel_preemptrt.sh 5.10.78-rt55
 ```
 
-This might be helpful for deploying the code automatically. The possible version numbers can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
+This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
 
 ### 1.2 Setting up real-time privileges
 

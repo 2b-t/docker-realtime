@@ -26,8 +26,8 @@ function select_preemptrt_major_version {
   local PREEMPTRT_MAJOR_VERSIONS=$(get_preemptrt_major_versions)
   local DIALOG_PREEMPTRT_MAJOR_VERSIONS
   for VER in $PREEMPTRT_MAJOR_VERSIONS
-  do
-    DIALOG_PREEMPTRT_MAJOR_VERSIONS="$DIALOG_PREEMPTRT_MAJOR_VERSIONS $VER $VER"
+    do
+      DIALOG_PREEMPTRT_MAJOR_VERSIONS="$DIALOG_PREEMPTRT_MAJOR_VERSIONS $VER $VER"
   done
   CURRENT_KERNEL_VERSION=$(uname -r | sed 's/\.[^\.]*//2g')
   echo $(dialog --no-tags --stdout --default-item $CURRENT_KERNEL_VERSION --menu "Select a major kernel version:" 30 40 10 $DIALOG_PREEMPTRT_MAJOR_VERSIONS)
@@ -43,8 +43,8 @@ function select_preemptrt_full_version {
   local PREEMPTRT_FULL_VERSIONS=$(get_preemptrt_full_versions)
   local DIALOG_PREEMPTRT_FULL_VERSIONS
   for VER in $PREEMPTRT_FULL_VERSIONS
-  do
-    DIALOG_PREEMPTRT_FULL_VERSIONS="$DIALOG_PREEMPTRT_FULL_VERSIONS $VER $VER"
+    do
+      DIALOG_PREEMPTRT_FULL_VERSIONS="$DIALOG_PREEMPTRT_FULL_VERSIONS $VER $VER"
   done
   echo $(dialog --no-tags --stdout --menu "Select the desired version of PREEMPT_RT:" 30 40 10 $DIALOG_PREEMPTRT_FULL_VERSIONS)
 }
