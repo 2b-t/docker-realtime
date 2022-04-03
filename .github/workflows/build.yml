@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Browse Dockerfile
-        run: cd docker/
       - name: Build the Dockerfile with Docker-Compose
-        run: docker-compose -f docker-compose.yml build
+        run: docker-compose -f docker/docker-compose.yml build
 
