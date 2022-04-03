@@ -1,3 +1,5 @@
+[![build](https://github.com/2b-t/docker-realtime/actions/workflows/build.yml/badge.svg)](https://github.com/2b-t/docker-realtime/actions/workflows/build.yml)
+
 # Docker real-time guide for `PREEMPT_RT`
 
 Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
