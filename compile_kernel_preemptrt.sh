@@ -1,13 +1,18 @@
 #!/bin/bash
-# Installation script for PREEMPT_RT real-time patch with simple graphical interface
+# Script for compiling a kernel with the PREEMPT_RT real-time patch with a simple graphical interface
 # Tobit Flatscher - github.com/2b-t (2022)
+#
+# Usage:
+# - '$ ./patch_kernel_preemprt.sh' and go through with a graphical user interface
+# - Select a PREEMPT_RT version at https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/"
+#   and compile with '$ sudo ./patch_kernel_preemprt.sh 5.10.78-rt55'
 
 
 # Install required dependencies
 function install_dependencies {
   echo "Installing dependencies..."
   sudo apt-get install -y grep curl sed
-  sudo apt-get install -y build-essential bc ca-certificates gnupg2 libssl-dev lsb-release libelf-dev bison flex dwarves zstd libncurses-dev fakeroot kernel-package linux-source equivs gcc dpkg-dev
+  sudo apt-get install -y build-essential bc ca-certificates gnupg2 libssl-dev lsb-release libelf-dev bison flex dwarves zstd libncurses-dev dpkg-dev
   echo "Dependencies installed successfully!"
 }
 
@@ -134,6 +139,12 @@ function generate_preemptrt_kernel_debian_package {
   sudo make -j$(nproc) deb-pkg
 }
 
+# Function for deciding whether to install the kernel now or install it later
+function select_install_now {
+  dialog --stdout --title "Install Debian package" --yesno "Want to install the Debian package now" 7 60
+  echo $?
+}
+
 # Install PREEMPT_RT from the Debian package
 function install_preemptrt_kernel_debian_package {
   echo "Installing Debian package..."
@@ -175,11 +186,20 @@ function install_kernel_interactive {
 
   # Choose between Debian package and installing directly
   local INSTALLATION_MODE=$(select_installation_mode)
-  if [ "$INSTALLATION_MODE" == "Debian" ]; then
-    generate_preemptrt_kernel_debian_package
-    install_preemptrt_kernel_debian_package
+  if [ "$INSTALLATION_MODE" == "Debian" ]
+    then
+      generate_preemptrt_kernel_debian_package
+      INSTALL_NOW=$(select_install_now)
+      if [ "$INSTALL_NOW" -eq 0 ]
+        then
+          install_preemptrt_kernel_debian_package
+          echo "Done: Installation with Debian package completed!"
+      else 
+        echo "Done: Debian package generated!"
+      fi
   else
     install_preemptrt_kernel_directly
+    echo "Done: Classic installation complete!"
   fi
 }
 
@@ -204,6 +224,7 @@ function install_kernel_noninteractive {
   unsign_kernel_configuration
   generate_preemptrt_kernel_debian_package
   install_preemptrt_kernel_debian_package
+  echo "Done: Installation with Debian package completed!"
 }
 
 

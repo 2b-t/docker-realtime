@@ -14,13 +14,13 @@ The `PREEMPT_RT` kernels are known for causing a headache with the **official Nv
 
 The installation of `PREEMPT_RT` can be performed either by installing the patch from an existing **Debian package** or by re-compiling the kernel yourself. While the first option should be preferred for having a more detailed control over the kernel set-up latter might still be desired or might be your only options in rare cases of lacking compatibility.
 
-In the main folder of this I have provided a **script `/patch_kernel_preemptrt.sh`** which is able to install either from an existing Debian package or by recompiling the kernel automatically. This means it should not be necessary to perform this steps manually. Nonetheless I will leave this here as a reference!
+In the main folder of this I have provided a **script `/compile_kernel_preemptrt.sh`** which is able to install either from an existing Debian package or by recompiling the kernel automatically. This means it should not be necessary to perform this steps manually. Nonetheless I will leave this here as a reference!
 
 #### 1.2.1 Installation from Debian package (recommended)
 
 The installation from a Debian package is way **simpler** than the recompilation listed below but is at the same time **less flexible** as it is only available for a limited number of kernels and kernel configurations. You might not be able to make the Debian package work with your particular system and might have to re-compile the kernel anyways. Nonetheless it is **highly advised** that you follow these simple steps before turning to a full re-compilation of the kernel.
 
-Have a look at the search results resulting from [this query on package.debian.org](https://packages.debian.org/search?keywords=linux-image-rt-amd64) and see if you can find a kernel close to yours, e.g. [this one](https://packages.debian.org/bullseye/linux-image-rt-amd64). If you can find one click on the architecture `amd64` under `Download linux-image-rt-amd64` on the bottom and select a geographically suiting mirror and save the image in a location of your choice.
+Have a look at the search results resulting from [this query on package.debian.org](https://packages.debian.org/search?keywords=linux-image-rt-amd64) (potentially changing the architecture!) and see if you can find a kernel close to yours, e.g. [this one](https://packages.debian.org/bullseye/linux-image-rt-amd64). If you can find one click on the architecture `amd64` under `Download linux-image-rt-amd64` on the bottom and select a geographically suiting mirror and save the image in a location of your choice.
 
 Finally install it by opening a terminal in this folder and typing
 
@@ -35,7 +35,7 @@ Jump to section 2.1.3 and then try to reboot. In case it does not work you will 
 
 The re-compilation of the kernel is described in the [official Ubuntu installation guide](https://help.ubuntu.com/lts/installation-guide/amd64/install.en.pdf#page=98) as well as on the [Franka Emika installation guide](https://frankaemika.github.io/docs/installation_linux.html#setting-up-the-real-time-kernel) page but [might depend on the precise version](https://stackoverflow.com/a/51709420). In case you are running into issues you might have to consider [this](https://askubuntu.com/a/1338150) and [this](https://askubuntu.com/a/1329625) post.
 
-Start by installing the Debian packages required for the re-compilation. For Debian this can be done conveniently with:
+Start by installing the Debian packages required for the re-compilation. For a Debian-based Linux distribution this can be done conveniently with:
 
 ```shell
 $ sudo apt-get install -y build-essential bc curl ca-certificates gnupg2 libssl-dev lsb-release libelf-dev bison flex dwarves zstd libncurses-dev fakeroot kernel-package linux-source equivs gcc dpkg-dev
@@ -96,7 +96,9 @@ and **generate a new configuration** `.config` file with
 $ make oldconfig
 ```
 
-Go ahead and **change the relevant configuration parameters** if you want to. This can be done graphically with `$ make xconfig`, `$ make menuconfig` or manually by modifying the `.config` file. If the compilation later on fails you might have to try to change the following flags:
+Go ahead and **change the relevant configuration parameters** if you want to. This can be done graphically with `$ make xconfig`, `$ make menuconfig` or manually by modifying the `.config` file located inside `linux-${KERNEL_VER_FULL}`. The [German Open Source Automation Development Lab (OSADL) ](https://www.osadl.org/) performs long-term tests on several kernel versions and publishes the results on the internet. One might want to use these parameters instead rather than working with his/her own `.config` file. An overview of the corresponding systems can be found [here](https://www.osadl.org/Real-time-optimization.qa-farm-latency-optimization.0.html) and the configuration file for a particular system can be downloaded (e.g. [this one](https://www.osadl.org/?id=1087#kernel)).
+
+For a successful installation I have to change the following parameters inside the `.config` file:
 
 ```shell
 # Find and replace
@@ -104,9 +106,10 @@ CONFIG_SYSTEM_TRUSTED_KEYS=""
 CONFIG_SYSTEM_REVOCATION_KEYS=""
 ```
 
-potentially also
+If your compilation fails nonetheless retry modifying these parameters as well:
 
 ```shell
+# Find and replace if compilation fails
 CONFIG_MODULE_SIG=n
 CONFIG_MODULE_SIG_ALL=n
 CONFIG_MODULE_SIG_FORCE=n

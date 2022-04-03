@@ -33,10 +33,10 @@ The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics
 
 ### 1.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided script [`patch_kernel_preemptrt.sh`](./patch_kernel_preemptrt.sh). You can launch it in two different ways:
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided script [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh). You can launch it in two different ways:
 
 ```shell
-$ ./patch_kernel_preemptrt.sh
+$ ./compile_kernel_preemptrt.sh
 ```
 
 will install the required dependencies and then open a dialog which lets you browse the possible versions and available options manually, reducing the copy and paste operations.
@@ -44,10 +44,10 @@ will install the required dependencies and then open a dialog which lets you bro
 If you supply a correct real-time patch version from the list of available ones as an input argument, launching the command with superuser privileges it will download all files, patch the kernel, create a Debian package if no official one is available and install it automatically.
 
 ```shell
-$ sudo ./patch_kernel_preemptrt.sh 5.10.78-rt55
+$ sudo ./compile_kernel_preemptrt.sh 5.10.78-rt55
 ```
 
-This might be helpful for deploying the code automatically.
+This might be helpful for deploying the code automatically. The possible version numbers can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
 
 ### 1.2 Setting up real-time privileges
 
