@@ -37,7 +37,7 @@ The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics
 
 The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh).
 
-[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it.
+[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt.sh`.
 
 #### 1.1.1 Installation from pre-compiled Debian package (recommended)
 
@@ -84,8 +84,24 @@ network_mode: host
 
 Launching the container as `privileged` and `net=host` should also help minimise the overhead as discussed [here](https://pythonspeed.com/articles/docker-performance-overhead/9) and [here](https://stackoverflow.com/a/26149994).
 
-Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line).
+Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line).
 
 ## 2. Examples
 
-This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a cyclic test is run to assess the real-time performance of the system.
+This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start) is run to assess the real-time performance of the system. You can compare the outcome to running it on your local system. There should be virtually no difference between the two.
+
+For launching the `cyclictest` open the Docker by typing
+
+```shell
+$ docker-compose -f docker/docker-compose.yml up
+```
+
+then browse the folder `benchmark/` and run the command
+
+```shell
+$ ./mklatencyplot.bash
+```
+
+This should create a latency histogram by measuring the difference between a thread's intended wake-up time and its actual wake up time. This measures any form of latency caused by hardware, firmware and operating system. For more information on this test refer to [OSADL](https://www.osadl.org/Create-a-latency-plot-from-cyclictest-hi.bash-script-for-latency-plot.0.html).
+
+The latency on most computers optimised for energy efficiency like laptops will be magnitudes larger than the one of a desktop system as can also clearly be seen [browsing the OSADL latency plots](https://www.osadl.org/Latency-plots.latency-plots.0.html). **It is therefore generally not advisable to use laptops for real-time tests** (with and without a Docker).

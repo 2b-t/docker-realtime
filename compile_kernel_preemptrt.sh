@@ -24,35 +24,35 @@ function get_preemptrt_major_versions {
 # Select the desired major version with a user dialog
 function select_preemptrt_major_version {
   local PREEMPTRT_MAJOR_VERSIONS=$(get_preemptrt_major_versions)
-  local DIALOG_PREEMPTRT_MAJOR_VERSIONS
-  for VER in $PREEMPTRT_MAJOR_VERSIONS
+  local DIALOG_PREEMPTRT_MAJOR_VERSIONS=""
+  for VER in ${PREEMPTRT_MAJOR_VERSIONS}
     do
-      DIALOG_PREEMPTRT_MAJOR_VERSIONS="$DIALOG_PREEMPTRT_MAJOR_VERSIONS $VER $VER"
+      DIALOG_PREEMPTRT_MAJOR_VERSIONS="${DIALOG_PREEMPTRT_MAJOR_VERSIONS} ${VER} ${VER}"
   done
   CURRENT_KERNEL_VERSION=$(uname -r | sed 's/\.[^\.]*//2g')
-  echo $(dialog --no-tags --stdout --default-item $CURRENT_KERNEL_VERSION --menu "Select a major kernel version:" 30 40 10 $DIALOG_PREEMPTRT_MAJOR_VERSIONS)
+  echo $(dialog --no-tags --stdout --default-item ${CURRENT_KERNEL_VERSION} --menu "Select a major kernel version:" 30 40 10 ${DIALOG_PREEMPTRT_MAJOR_VERSIONS})
 }
 
 # Get the full versions by crawling website
 function get_preemptrt_full_versions {
-  echo $(curl -Ls https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/$PREEMPT_RT_VER | grep -o -P '(?<=href\=\"patch-).*(?=.patch.gz\">)')
+  echo $(curl -Ls https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/${PREEMPT_RT_VER} | grep -o -P '(?<=href\=\"patch-).*(?=.patch.gz\">)')
 }
 
 # Select the desired major version with a user dialog
 function select_preemptrt_full_version {
   local PREEMPTRT_FULL_VERSIONS=$(get_preemptrt_full_versions)
-  local DIALOG_PREEMPTRT_FULL_VERSIONS
-  for VER in $PREEMPTRT_FULL_VERSIONS
+  local DIALOG_PREEMPTRT_FULL_VERSIONS=""
+  for VER in ${PREEMPTRT_FULL_VERSIONS}
     do
-      DIALOG_PREEMPTRT_FULL_VERSIONS="$DIALOG_PREEMPTRT_FULL_VERSIONS $VER $VER"
+      DIALOG_PREEMPTRT_FULL_VERSIONS="${DIALOG_PREEMPTRT_FULL_VERSIONS} ${VER} ${VER}"
   done
-  echo $(dialog --no-tags --stdout --menu "Select the desired version of PREEMPT_RT:" 30 40 10 $DIALOG_PREEMPTRT_FULL_VERSIONS)
+  echo $(dialog --no-tags --stdout --menu "Select the desired version of PREEMPT_RT:" 30 40 10 ${DIALOG_PREEMPTRT_FULL_VERSIONS})
 }
 
 # Reconstruct the corresponding kernel major version
 function reconstruct_kernel_major_version {
   local KERNEL_MAJOR_VERSION=$(echo "${PREEMPT_RT_VER}" | grep -o -P '^\s*(\d)+')
-  echo "$(curl -Ls https://www.kernel.org/pub/linux/kernel | grep -o -P "(?<=href\=\")(v$KERNEL_MAJOR_VERSION.*)(?=/\">)")"
+  echo "$(curl -Ls https://www.kernel.org/pub/linux/kernel | grep -o -P "(?<=href\=\")(v${KERNEL_MAJOR_VERSION}.*)(?=/\">)")"
 }
 
 # Download and extract the vanilla kernel
@@ -78,7 +78,7 @@ function sign_kernel_and_preemptrt {
   if [ $? -ne 0 ]
     then
       local KERNEL_KEY=$(gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
-      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $KERNEL_KEY
+      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${KERNEL_KEY}
       gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign
   fi
   
@@ -86,7 +86,7 @@ function sign_kernel_and_preemptrt {
   if [ $? -ne 0 ]
     then
       local PREEMPT_KEY=$(gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
-      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $PREEMPT_KEY
+      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${PREEMPT_KEY}
       gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign
   fi
 }
@@ -111,14 +111,14 @@ function generate_new_kernel_configuration {
 # @param $2 its desired value
 function find_and_replace_in_config {
   local CONFIG_FILE=".config"
-  grep -E "$1=" $CONFIG_FILE && sed -i "s/$1=.*/$1=$2/" $CONFIG_FILE || echo $1"="$2 >> $CONFIG_FILE
+  grep -E "$1=" $CONFIG_FILE && sed -i "s/$1=.*/$1=$2/" $CONFIG_FILE || echo $1"="$2 >> ${CONFIG_FILE}
 }
 
 # Function for commenting out certain settings in the configuration files
 # @param $1 The name of the setting to be commented out
 function comment_out_in_config {
   local CONFIG_FILE=".config"
-  sed -E "/$1/ s/^#*/#/" -i $CONFIG_FILE
+  sed -E "/$1/ s/^#*/#/" -i ${CONFIG_FILE}
 }
 
 # Unsign the kernel configuration
@@ -186,11 +186,11 @@ function install_kernel_interactive {
 
   # Choose between Debian package and installing directly
   local INSTALLATION_MODE=$(select_installation_mode)
-  if [ "$INSTALLATION_MODE" == "Debian" ]
+  if [ "${INSTALLATION_MODE}" == "Debian" ]
     then
       generate_preemptrt_kernel_debian_package
       INSTALL_NOW=$(select_install_now)
-      if [ "$INSTALL_NOW" -eq 0 ]
+      if [ "${INSTALL_NOW}" -eq 0 ]
         then
           install_preemptrt_kernel_debian_package
           echo "Done: Installation with Debian package completed!"
@@ -230,6 +230,7 @@ function install_kernel_noninteractive {
 
 # Install the kernel either in an interactive or non-interactive way depending if an input argument is given
 function main {
+  set -e # Exit immediately in case of failure
   if [ "$#" -eq 0 ]
     then
       install_kernel_interactive
