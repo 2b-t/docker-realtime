@@ -74,20 +74,21 @@ function download_and_extract_preemptrt {
 # Sign the kernel and the patch
 function sign_kernel_and_preemptrt {
   echo "Signing keys..."
-  gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign
-  if [ $? -ne 0 ]
-    then
-      local KERNEL_KEY=$(gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
-      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${KERNEL_KEY}
-      gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign
+  # Catch non-zero exit code despite "set -e", see https://stackoverflow.com/a/57189853
+  if gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign; then 
+    :
+  else
+    local KERNEL_KEY=$(gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
+    gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${KERNEL_KEY}
+    gpg2 --verify linux-${KERNEL_VER_FULL}.tar.sign
   fi
-  
-  gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign
-  if [ $? -ne 0 ]
-    then
-      local PREEMPT_KEY=$(gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
-      gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${PREEMPT_KEY}
-      gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign
+
+  if gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign; then 
+    :
+  else
+    local PREEMPT_KEY=$(gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign 2>&1 | grep -o -P '(?<=RSA key )(.*)')
+    gpg2 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${PREEMPT_KEY}
+    gpg2 --verify patch-${PREEMPT_RT_VER_FULL}.patch.sign
   fi
 }
 
