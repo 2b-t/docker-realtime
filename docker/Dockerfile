@@ -17,6 +17,11 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-distutils \
     gnuplot-qt
+# For unit-testing bash
+RUN apt-get update && apt-get install -y \
+    bats \
+    dialog \
+    xdotool
 
 # Fetch most recent version of rt-tests and mklatencyplot
 RUN cd ${WS_DIR} \

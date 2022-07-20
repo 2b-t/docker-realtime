@@ -1,0 +1,41 @@
+#!/bin/bash
+# This script searches https://packages.debian.org/ for kernels with the PREEMPT_RT patch and allows the user to choose a desired version interactively
+# This should be preferred over the re-compilation of the Linux kernel
+# Tobit Flatscher - github.com/2b-t (2022)
+#
+# Usage:
+# - '$ ./install_debian_preemptrt'
+
+
+function main() {
+  declare desc="Install the PREEMPT_RT-patched kernel from the available pre-compiled Debian packages available online"
+  set -e
+  
+  local CURRENT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)
+  local LIB_OUTPUT="${CURRENT_PATH}/lib_output.sh"
+  local LIB_INSTALL_DEBIAN="${CURRENT_PATH}/lib_install_debian.sh"
+  source "${LIB_OUTPUT}"
+  source "${LIB_INSTALL_DEBIAN}"
+
+  info_msg "Installing dependencies..."
+  install_dependencies
+  success_msg "Dependencies installed successfully!"
+
+  local DEBIAN_VERSION=$(select_debian_version)
+  local DOWNLOAD_LOCATION=$(select_download_location "${DEBIAN_VERSION}")
+  local DOWNLOADED_FILE=$(download_file "${DOWNLOAD_LOCATION}")
+  success_msg "Downloaded Debian package '${DOWNLOADED_FILE}' from '${DOWNLOAD_LOCATION}'..."
+
+  local IS_INSTALL_NOW=$(select_install_now)
+  if [ "${IS_INSTALL_NOW}" -eq 0 ]; then
+    info_msg "Installing Debian package '${DOWNLOADED_FILE}'..."
+    install_debian_pkg "${DOWNLOADED_FILE}"
+    success_msg "Done: Installation from Debian package '${DOWNLOADED_FILE}' completed!"
+  else 
+    warning_msg "Done: Debian package '${DOWNLOADED_FILE}' downloaded successfully but installation skipped!"
+  fi
+
+  exit 0
+}
+
+main $@

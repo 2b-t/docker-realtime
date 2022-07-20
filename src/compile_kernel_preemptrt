@@ -1,0 +1,104 @@
+#!/bin/bash
+# Script for compiling a kernel with the PREEMPT_RT real-time patch with a simple graphical interface
+# Tobit Flatscher - github.com/2b-t (2022)
+#
+# Usage:
+# - '$ ./compile_kernel_preemptrt' and go through with a graphical user interface
+# - Select a PREEMPT_RT version at https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/"
+#   and compile with '$ sudo ./compile_kernel_preemptrt 5.10.78-rt55'
+
+
+function install_kernel_interactive() {
+  declare desc="Install the kernel with a graphic user menu and let the user decide which version to choose"
+  {
+    info_msg "Installing dependencies..."
+    sudo apt-get install -y dialog
+    install_dependencies
+    success_msg "Dependencies installed successfully!"
+  } || {
+    warning_msg "Warning: Could not install dependencies. Installation might fail!"
+  }
+
+  local PREEMPTRT_FULL_VERSION=$(select_preemptrt)
+  local KERNEL_FULL_VERSION=$(extract_kernel_full_version "${PREEMPTRT_FULL_VERSION}")
+
+  info_msg "Downloading and extracting kernel and patch..."
+  local KERNEL_FILE=$(download_and_extract_kernel "${KERNEL_FULL_VERSION}") 
+  local PREEMPTRT_FILE=$(download_and_extract_preemptrt "${PREEMPTRT_FULL_VERSION}")
+  success_msg "Kernel and patch downloaded and extracted successfully!"
+
+  info_msg "Applying patch to kernel..."
+  apply_patch_to_kernel "${PREEMPTRT_FILE}" "${KERNEL_FILE}"
+  generate_new_kernel_configuration
+  success_msg "Patch applied successfully!"
+  info_msg "Forcing unsigned kernel..."
+  unsign_kernel_configuration
+
+  local INSTALLATION_MODE=$(select_installation_mode)
+  if [ "${INSTALLATION_MODE}" == "Debian" ]
+    then
+      generate_preemptrt_kernel_debian_package
+      IS_INSTALL_NOW=$(select_install_now)
+      if [ "${IS_INSTALL_NOW}" -eq 0 ]
+        then
+          install_preemptrt_kernel_debian_package "${PREEMPTRT_FULL_VERSION}"
+          success_msg "Done: Installation with Debian package completed!"
+      else 
+        warning_msg "Done: Debian package generated successfully but installation skipped!"
+      fi
+  else
+    install_preemptrt_kernel_directly
+    success_msg "Done: Classic installation complete!"
+  fi
+}
+
+function install_kernel_noninteractive() {
+  declare desc="Install the PREEMPT_RT kernel by patching a kernel and installing it as a Debian package from a given command-line argument (e.g. 5.10.78-rt55) without interactive choices"
+  {
+    info_msg "Installing dependencies..."
+    install_dependencies
+    success_msg "Dependencies installed successfully!"
+  } || {
+    warning_msg "Warning: Could not install dependencies. Installation might fail!"
+  }
+
+  local PREEMPTRT_FULL_VERSION=$1
+  local KERNEL_FULL_VERSION=$(extract_kernel_full_version "${PREEMPTRT_FULL_VERSION}")
+
+  local KERNEL_FILE=$(download_and_extract_kernel "${KERNEL_FULL_VERSION}")
+  local PREEMPTRT_FILE=$(download_and_extract_preemptrt "${PREEMPTRT_FULL_VERSION}")
+  apply_patch_to_kernel "${PREEMPTRT_FILE}" "${KERNEL_FILE}"
+  generate_new_kernel_configuration
+  unsign_kernel_configuration
+  generate_preemptrt_kernel_debian_package
+  install_preemptrt_kernel_debian_package "${PREEMPTRT_FULL_VERSION}"
+  success_msg "Done: Installation with Debian package completed!"
+}
+
+
+function main() {
+  declare desc="Install the kernel either in an interactive or non-interactive way depending if an input argument is given"
+  local CURRENT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)
+  local LIB_OUTPUT="${CURRENT_PATH}/lib_output.sh"
+  local LIB_INSTALL_DEBIAN="${CURRENT_PATH}/lib_compile_kernel.sh"
+  source "${LIB_OUTPUT}"
+  source "${LIB_INSTALL_DEBIAN}"
+
+  set -e # Exit immediately in case of failure
+  if [ "$#" -eq 0 ]; then
+    install_kernel_interactive
+  elif [ "$#" -eq 1 ] && [ "${EUID}" -eq 0 ]; then
+    install_kernel_noninteractive $@
+  else
+    error_msg "Error: Could not run installation script!"
+    info_msg "Either launch it as: "
+    info_msg " - '$ ./compile_kernel_preemptrt'"
+    info_msg " - '$ sudo ./compile_kernel_preemptrt 5.10.78-rt55'"
+    info_msg "For the available PREEMPT_RT versions see: "
+    info_msg "see https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/"
+    exit 1
+  fi
+  exit 0
+}
+
+main $@

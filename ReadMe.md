@@ -2,7 +2,7 @@
 
 # Docker real-time guide for `PREEMPT_RT`
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - July 2022)
 
 
 
@@ -35,28 +35,30 @@ The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics
 
 ### 1.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh).
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt).
 
-[`install_debian_preemptrt.sh`](./install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt.sh`.
+[`src/install_debian_preemptrt`](./src/install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
 
 #### 1.1.1 Installation from pre-compiled Debian package (recommended)
 
-Start of by launching [`install_debian_preemptrt.sh`](./install_debian_preemptrt) and follow the installation instructions
+Start of by launching [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and follow the installation instructions
 
 ```shell
-$ ./install_debian_preemptrt.sh
+$ cd src
+$ ./install_debian_preemptrt
 ```
 
 Afterwards you can reboot your system (be sure to select the correct kernel!) and should already be ready to go. You can check the kernel version with `$ uname -r` to verify that you are using the correct kernel and the installation was indeed successful.
 
 #### 1.1.2 Compilation of the kernel
 
-If the installation above fails or for some good reason you have to compile the kernel yourself you can use the [`compile_kernel_preemptrt.sh`](./compile_kernel_preemptrt.sh) script.
+If the installation above fails or for some good reason you have to compile the kernel yourself you can use the [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) script.
 
 You can launch it in two different ways:
 
 ```shell
-$ ./compile_kernel_preemptrt.sh
+$ cd src
+$ ./compile_kernel_preemptrt
 ```
 
 will install the required dependencies and then open a dialog which lets you browse the possible versions and available options manually, reducing the copy and paste operations.
@@ -64,7 +66,8 @@ will install the required dependencies and then open a dialog which lets you bro
 If you supply a correct real-time patch version from the list of available ones as an input argument, launching the command with superuser privileges it will download all files, patch the kernel, create a Debian package if no official one is available and install it automatically.
 
 ```shell
-$ sudo ./compile_kernel_preemptrt.sh 5.10.78-rt55
+$ cd src
+$ sudo ./compile_kernel_preemptrt 5.10.78-rt55
 ```
 
 This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
