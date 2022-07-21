@@ -6,11 +6,15 @@
 # - '$ ./test_lib_compile_kernel.bats'
 
 
+test_file() {
+  local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
+  echo "${DIR}/../src/lib_compile_kernel.sh"
+}
+
 setup() {
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
-  local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
-  local TEST_FILE="${DIR}/../src/lib_compile_kernel.sh"
+  local TEST_FILE=$(test_file)
   source "${TEST_FILE}"
 }
 
@@ -47,7 +51,14 @@ setup() {
 
 @test "Test select_preemptrt_minor_version" {
   declare desc="Test if the selected PREEMPT_RT patch respects the version numbering"
-  (sleep 2 && xdotool key Return) & local PREEMPTRT_MINOR_VERSION=$(select_preemptrt_minor_version)
+  tmux new -d -A -s "bats_test_session"
+  TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_preemptrt_minor_version) >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local PREEMPTRT_MINOR_VERSION=$(</tmp/capture)
   assert_not_equal "${PREEMPTRT_MINOR_VERSION}" ""
   assert_regex "${PREEMPTRT_MINOR_VERSION}" "^[0-9]+\.[0-9]+(\.[0-9]+)?$"
 }
@@ -64,8 +75,15 @@ setup() {
 
 @test "Test select_preemptrt_full_version" {
   declare desc="Test if the full PREEMPT_RT version can be selected from major and minor version and respects the version numbering"
-  local PREEMPTRT_MINOR_VERSION="5.11"
-  (sleep 2 && xdotool key Return) & local PREEMPTRT_FULL_VERSION=$(select_preemptrt_full_version "${PREEMPTRT_MINOR_VERSION}")
+  local PREEMPTRT_MINOR_VERSION="5.11"  
+  tmux new -d -A -s "bats_test_session"
+  TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_preemptrt_full_version '"${PREEMPTRT_MINOR_VERSION}"') >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local PREEMPTRT_FULL_VERSION=$(</tmp/capture)
   assert_not_equal "${PREEMPTRT_FULL_VERSION}" ""
   assert_regex "${PREEMPTRT_FULL_VERSION}" "^[0-9]+\.[0-9]+(\.[0-9]+)+\-rt[0-9]+$"
 }

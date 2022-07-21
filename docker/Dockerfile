@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y \
     bats \
     dialog \
-    xdotool
+    tmux
 
 # Fetch most recent version of rt-tests and mklatencyplot
 RUN cd ${WS_DIR} \

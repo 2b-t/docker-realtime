@@ -6,12 +6,16 @@
 # - '$ ./test_lib_install_debian.bats'
 
 
+test_file() {
+  local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
+  echo "${DIR}/../src/lib_install_debian.sh"
+}
+
 setup() {
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
-  local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
-  local TEST_FILE="${DIR}/../src/lib_install_debian.sh"
-  source "${TEST_FILE}"
+  TEST_FILE=$(test_file)
+  source ${TEST_FILE}
 }
 
 @test "Test get_debian_versions" {
@@ -30,7 +34,14 @@ setup() {
 
 @test "Test select_debian_version" {
   declare desc="Test if select Debian version dialog returns a single option only"
-  (sleep 2 && xdotool key B && xdotool key Return) & DEBIAN_VERSION=$(select_debian_version)
+  tmux new -d -A -s "bats_test_session"
+  TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_debian_version) >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local DEBIAN_VERSION=$(</tmp/capture)
   assert_regex "${DEBIAN_VERSION}" "^([a-z])+$"
 }
 
@@ -44,7 +55,14 @@ setup() {
 @test "Test select_download_location" {
   declare desc="Test if select download location dialog returns a single option only"
   local DEBIAN_VERSION="bullseye"
-  (sleep 1 && xdotool key Return) & local DOWNLOAD_LOCATION=$(select_download_location "${DEBIAN_VERSION}")
+  tmux new -d -A -s "bats_test_session"
+  TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_download_location '"${DEBIAN_VERSION})"' >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local DOWNLOAD_LOCATION=$(</tmp/capture)
   assert_regex "${DOWNLOAD_LOCATION}" "^(http://).+(\.deb)$"
 }
 
