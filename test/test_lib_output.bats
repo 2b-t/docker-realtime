@@ -37,3 +37,4 @@ function setup() {
   run success_msg "success"
   assert_output --partial "success"
 }
+

@@ -72,3 +72,4 @@ function setup() {
   local DOWNLOADED_FILE=$(extract_filename "${DOWNLOAD_LOCATION}")
   assert_regex "${DOWNLOADED_FILE}" "^(linux-image-rt-).+(\.deb)$"
 }
+

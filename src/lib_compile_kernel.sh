@@ -223,3 +223,4 @@ function install_preemptrt_kernel_directly() {
   sudo make modules_install -j$(nproc)
   sudo make install -j$(nproc)
 }
+
