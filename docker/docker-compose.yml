@@ -4,6 +4,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    container_name: realtime_docker
     tty: true
     privileged: true
     network_mode: host

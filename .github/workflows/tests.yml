@@ -1,0 +1,28 @@
+name: Tests
+
+on:
+  push:
+    paths:
+      - 'docker/Dockerfile'
+      - 'docker/docker-compose.yml'
+      - 'src/**'
+      - 'test/**'
+
+jobs:
+  docker-compose-build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Launch the Docker
+        run: docker-compose -f docker/docker-compose.yml up --detach
+      - name: Run BATS unit tests
+        run: |
+          docker exec realtime_docker bash -c "
+          cd test &&
+          ./test_lib_compile_kernel.bats &&
+          ./test_lib_install_debian.bats && 
+          ./test_lib_output.bats"
+      - name: Stop Docker
+        run: docker stop realtime_docker
+
