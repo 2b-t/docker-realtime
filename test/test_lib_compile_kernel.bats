@@ -6,12 +6,12 @@
 # - '$ ./test_lib_compile_kernel.bats'
 
 
-test_file() {
+function test_file() {
   local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
   echo "${DIR}/../src/lib_compile_kernel.sh"
 }
 
-setup() {
+function setup() {
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
   local TEST_FILE=$(test_file)
@@ -52,7 +52,7 @@ setup() {
 @test "Test select_preemptrt_minor_version" {
   declare desc="Test if the selected PREEMPT_RT patch respects the version numbering"
   tmux new -d -A -s "bats_test_session"
-  TEST_FILE=$(test_file)
+  local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
   tmux send-keys -t "bats_test_session" 'echo $(select_preemptrt_minor_version) >/tmp/capture' Enter
   sleep 5
@@ -77,7 +77,7 @@ setup() {
   declare desc="Test if the full PREEMPT_RT version can be selected from major and minor version and respects the version numbering"
   local PREEMPTRT_MINOR_VERSION="5.11"  
   tmux new -d -A -s "bats_test_session"
-  TEST_FILE=$(test_file)
+  local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
   tmux send-keys -t "bats_test_session" 'echo $(select_preemptrt_full_version '"${PREEMPTRT_MINOR_VERSION}"') >/tmp/capture' Enter
   sleep 5
@@ -135,3 +135,46 @@ setup() {
   local IS_PREEMPTRT_SIGNATURE_DOWNLOAD_LINK_VALID=$(is_valid_url "${PREEMPTRT_SIGNATURE_DOWNLOAD_LINK}")
   assert_equal "${IS_PREEMPTRT_SIGNATURE_DOWNLOAD_LINK_VALID}" "true"
 }
+
+@test "Test find_and_replace_in_config" {
+  local CONFIG_FILE="/tmp/.config"
+  echo -e 'SOME_SETTING="old_value"\nANOTHER_SETTING="another_value"' > "${CONFIG_FILE}"
+  find_and_replace_in_config "${CONFIG_FILE}" "SOME_SETTING" '"new_value"'
+  local RESULT_CONFIG=$(<"${CONFIG_FILE}")
+  rm -f "${CONFIG_FILE}"
+  assert_regex "${RESULT_CONFIG}" '^SOME_SETTING="new_value"'
+}
+
+@test "Test comment_out_in_config" {
+  local CONFIG_FILE="/tmp/.config"
+  echo -e 'SOME_SETTING="some_value"\nANOTHER_SETTING="another_value"' > "${CONFIG_FILE}"
+  comment_out_in_config "${CONFIG_FILE}" "SOME_SETTING"
+  local RESULT_CONFIG=$(<"${CONFIG_FILE}")
+  rm -f "${CONFIG_FILE}"
+  assert_regex "${RESULT_CONFIG}" "^#SOME_SETTING"
+}
+
+@test "Test select_installation_mode" {
+  tmux new -d -A -s "bats_test_session"
+  local TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_installation_mode) >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local INSTALLATION_MODE=$(</tmp/capture)
+  assert_equal "${INSTALLATION_MODE}" "Debian"
+}
+
+@test "Test select_install_now" {
+  tmux new -d -A -s "bats_test_session"
+  local TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_install_now) >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local IS_INSTALL_NOW=$(</tmp/capture)
+  assert_equal "${IS_INSTALL_NOW}" 0
+}
+

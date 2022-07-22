@@ -6,15 +6,15 @@
 # - '$ ./test_lib_install_debian.bats'
 
 
-test_file() {
+function test_file() {
   local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
   echo "${DIR}/../src/lib_install_debian.sh"
 }
 
-setup() {
+function setup() {
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
-  TEST_FILE=$(test_file)
+  local TEST_FILE=$(test_file)
   source ${TEST_FILE}
 }
 
@@ -35,7 +35,7 @@ setup() {
 @test "Test select_debian_version" {
   declare desc="Test if select Debian version dialog returns a single option only"
   tmux new -d -A -s "bats_test_session"
-  TEST_FILE=$(test_file)
+  local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
   tmux send-keys -t "bats_test_session" 'echo $(select_debian_version) >/tmp/capture' Enter
   sleep 5
@@ -56,7 +56,7 @@ setup() {
   declare desc="Test if select download location dialog returns a single option only"
   local DEBIAN_VERSION="bullseye"
   tmux new -d -A -s "bats_test_session"
-  TEST_FILE=$(test_file)
+  local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
   tmux send-keys -t "bats_test_session" 'echo $(select_download_location '"${DEBIAN_VERSION})"' >/tmp/capture' Enter
   sleep 5
