@@ -125,7 +125,6 @@ function setup() {
   local KERNEL_SIGNATURE_DOWNLOAD_LINK=$(get_kernel_signature_link "${KERNEL_MAJOR_TAG}" "${KERNEL_FULL_VERSION}")
   local PREEMPTRT_DOWNLOAD_LINK=$(get_preemptrt_link "${KERNEL_MINOR_VERSION}" "${PREEMPTRT_FULL_VERSION}")
   local PREEMPTRT_SIGNATURE_DOWNLOAD_LINK=$(get_preemptrt_signature_link "${KERNEL_MINOR_VERSION}" "${PREEMPTRT_FULL_VERSION}")
-  # Check if download links exist
   local IS_KERNEL_DOWNLOAD_LINK_VALID=$(is_valid_url "${KERNEL_DOWNLOAD_LINK}")
   assert_equal "${IS_KERNEL_DOWNLOAD_LINK_VALID}" "true"
   local IS_KERNEL_SIGNATURE_DOWNLOAD_LINK_VALID=$(is_valid_url "${KERNEL_SIGNATURE_DOWNLOAD_LINK}")
@@ -137,6 +136,7 @@ function setup() {
 }
 
 @test "Test find_and_replace_in_config" {
+  declare desc="Test if a setting is correctly found and replaced in the configuration file"
   local CONFIG_FILE="/tmp/.config"
   echo -e 'SOME_SETTING="old_value"\nANOTHER_SETTING="another_value"' > "${CONFIG_FILE}"
   find_and_replace_in_config "${CONFIG_FILE}" "SOME_SETTING" '"new_value"'
@@ -146,6 +146,7 @@ function setup() {
 }
 
 @test "Test comment_out_in_config" {
+  declare desc="Test if a setting is correctly found and commented out in the configuration file"
   local CONFIG_FILE="/tmp/.config"
   echo -e 'SOME_SETTING="some_value"\nANOTHER_SETTING="another_value"' > "${CONFIG_FILE}"
   comment_out_in_config "${CONFIG_FILE}" "SOME_SETTING"
@@ -155,6 +156,7 @@ function setup() {
 }
 
 @test "Test select_installation_mode" {
+  declare desc="Test if the installation mode can be selected from the graphic user menu"
   tmux new -d -A -s "bats_test_session"
   local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
@@ -167,6 +169,7 @@ function setup() {
 }
 
 @test "Test select_install_now" {
+  declare desc="Test if the installation of the Debian package can be started from the graphic user menu"
   tmux new -d -A -s "bats_test_session"
   local TEST_FILE=$(test_file)
   tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
