@@ -174,7 +174,7 @@ function generate_new_kernel_configuration() {
 
 function find_and_replace_in_config() {
   declare desc="Add or replace (if exists) given setting in the configuration file"
-  local KERNEL_CONFIG_FILE=".config"
+  local KERNEL_CONFIG_FILE=$1
   local SETTING_NAME=$2
   local DESIRED_VALUE=$3
   grep -E "${SETTING_NAME}=" "${KERNEL_CONFIG_FILE}" && sed -i "s/${SETTING_NAME}=.*/${SETTING_NAME}=${DESIRED_VALUE}/" "${KERNEL_CONFIG_FILE}" || echo "${SETTING_NAME}=${DESIRED_VALUE}" >> "${KERNEL_CONFIG_FILE}"
