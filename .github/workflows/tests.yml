@@ -18,13 +18,14 @@ jobs:
           submodules: 'recursive'
       - name: Launch the Docker
         run: docker-compose -f docker/docker-compose.yml up --detach
-      - name: Run BATS unit tests
+      - name: Run BATS Bash unit-tests
         run: |
           docker exec realtime_docker bash -c "
-          cd test &&
-          ./test_lib_compile_kernel.bats &&
-          ./test_lib_install_debian.bats && 
-          ./test_lib_output.bats"
+            cd test &&
+            ./test_lib_compile_kernel.bats &&
+            ./test_lib_install_debian.bats && 
+            ./test_lib_output.bats
+          "
       - name: Stop Docker
         run: docker stop realtime_docker
 
