@@ -7,11 +7,13 @@
 
 
 function test_file() {
+  declare desc="Get the filename of the file to be tested"
   local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
   echo "${DIR}/../src/lib_install_debian.sh"
 }
 
 function setup() {
+  declare desc="Source the libraries required for unit testing and the file to be tested"
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
   local TEST_FILE=$(test_file)

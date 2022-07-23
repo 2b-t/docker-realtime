@@ -7,6 +7,7 @@
 
 
 function setup() {
+  declare desc="Source the libraries required for unit testing and the file to be tested"
   load "test_helper/bats-support/load"
   load "test_helper/bats-assert/load"
   local DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )" >/dev/null 2>&1 && pwd )"
