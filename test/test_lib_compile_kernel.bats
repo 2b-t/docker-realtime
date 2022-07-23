@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-# Unit-tests for Bash library for compiling PREEMPT_RT kernel from source
+# Unit-tests for Bash library for compiling PREEMPT_RT Linux kernel from source
 # Tobit Flatscher - github.com/2b-t (2022)
 #
 # Usage:

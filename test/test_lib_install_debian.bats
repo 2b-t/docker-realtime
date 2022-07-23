@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-# Unit-tests for Bash library for installing PREEMPT_RT kernel from a Debian package
+# Unit-tests for Bash library for installing PREEMPT_RT Linux kernel from a Debian package
 # Tobit Flatscher - github.com/2b-t (2022)
 #
 # Usage:
