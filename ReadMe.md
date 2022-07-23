@@ -1,4 +1,4 @@
-[![Tests](https://github.com/2b-t/docker-realtime/actions/workflows/tests.yml/badge.svg)](https://github.com/2b-t/docker-realtime/actions/workflows/tests.yml)
+[![Tests](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml/badge.svg)](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml)
 
 # Docker real-time guide for `PREEMPT_RT`
 
