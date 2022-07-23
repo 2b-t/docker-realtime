@@ -20,12 +20,12 @@ jobs:
         run: docker-compose -f docker/docker-compose.yml up --detach
       - name: Run BATS Bash unit-tests
         run: |
-          docker exec realtime_docker bash -c "
-            cd test &&
-            ./test_lib_compile_kernel.bats &&
-            ./test_lib_install_debian.bats && 
-            ./test_lib_output.bats
-          "
+          docker exec realtime_docker bash -c '
+            cd test && 
+            for TEST_FILE in $(find . -maxdepth 1 -name "*.bats"); do 
+              ./"${TEST_FILE}";
+            done
+          '
       - name: Stop Docker
         run: docker stop realtime_docker
 
