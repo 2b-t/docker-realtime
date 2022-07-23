@@ -1,11 +1,11 @@
 #!/bin/bash
-# Script for compiling a kernel with the PREEMPT_RT real-time patch with a simple graphical interface
+# Script for compiling a Linux kernel with the PREEMPT_RT real-time patch with a simple graphical interface
 # Tobit Flatscher - github.com/2b-t (2022)
 #
 # Usage:
-# - '$ ./compile_kernel_preemptrt' and go through with a graphical user interface
+# - '$ ./compile_kernel_preemptrt' and follow through the installation with a graphic user interface
 # - Select a PREEMPT_RT version at https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/"
-#   and compile with '$ sudo ./compile_kernel_preemptrt 5.10.78-rt55'
+#   and run this script with '$ sudo ./compile_kernel_preemptrt 5.10.78-rt55'
 
 
 function install_kernel_interactive() {

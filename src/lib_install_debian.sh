@@ -1,5 +1,6 @@
 #!/bin/bash
-# This library holds functions for searching https://packages.debian.org/ for kernels with the PREEMPT_RT patch and installing it in an interactive way
+# This library holds functions for searching https://packages.debian.org/ for Debian packages of Linux kernels with the PREEMPT_RT patch and 
+# installing the desired version interactively
 # Tobit Flatscher - github.com/2b-t (2022)
 
 

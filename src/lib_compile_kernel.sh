@@ -1,5 +1,5 @@
 #!/bin/bash
-# Library for compiling a kernel with the PREEMPT_RT real-time patch using a simple graphical interface
+# Library for compiling a Linux kernel with the PREEMPT_RT real-time patch using a simple graphical interface
 # Tobit Flatscher - github.com/2b-t (2022)
 
 

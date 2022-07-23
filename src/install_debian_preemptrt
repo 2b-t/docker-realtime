@@ -1,5 +1,6 @@
 #!/bin/bash
-# This script searches https://packages.debian.org/ for kernels with the PREEMPT_RT patch and allows the user to choose a desired version interactively
+# This script searches https://packages.debian.org/ for Debian packages of Linux kernels with the PREEMPT_RT patch and 
+# allows the user then to install the desired version interactively
 # This should be preferred over the re-compilation of the Linux kernel
 # Tobit Flatscher - github.com/2b-t (2022)
 #
