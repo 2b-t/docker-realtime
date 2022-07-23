@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-distutils \
     gnuplot-qt
-# For unit-testing bash
+# For Bash unit tests
 RUN apt-get update && apt-get install -y \
     bats \
     dialog \
