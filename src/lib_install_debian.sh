@@ -71,7 +71,7 @@ function select_install_now() {
 
 function install_debian_pkg {
   declare desc="Install a Debian package given by its file location"
-  local ${DEBIAN_PKG}=$1
+  local DEBIAN_PKG=$1
   sudo dpkg -i ${DEBIAN_PKG}
   sudo apt-get install -f
 }
