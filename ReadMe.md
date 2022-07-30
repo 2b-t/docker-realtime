@@ -1,4 +1,4 @@
-[![Tests](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml/badge.svg)](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml)
+[![Tests](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml/badge.svg)](https://github.com/2b-t/docker-realtime/actions/workflows/run-tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Docker real-time guide for `PREEMPT_RT`
 
@@ -6,38 +6,40 @@ Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - July 2022)
 
 
 
-## 0. Overview
+## Overview
 
-This is guide explains how one can **develop inside a [Docker container](https://www.docker.com/) while being able to run real-time capable code on a Linux operating system**. This is in particular desirable for **robotics**, such as commanding the [Franka Emika Panda](https://www.franka.de/) collaborative robotic arm but may also apply to software developers developing any other form of real-time capable code.
+This is guide explains how one can **develop inside a [Docker container](https://www.docker.com/) while being able to run real-time capable code on a Linux operating system**. As such it walks you through:
 
-The proposed solution simply consists in having a **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start) patched host system** and launching it with the correct Docker options **`--privileged --net=host`** but this repository also discusses other useful Docker- and real-time-related issues that might be interesting for a wider audience such as:
+- **Basics of real-time systems** and an [*overview of different real-time Linux approaches*](./doc/realtime_basics/RealTimeLinux.md)
+- **Set-up** of a real-time system, in particular the [*installation of `PREEMPT_RT`*](./doc/realtime_basics/PreemptRt.md) supplying simple [*scripts for automatically re-compiling the kernel*](./src/compile_kernel_preemptrt)
+- Possible **optimisations** of a real-time system in order to minimise the latency
+- [Introduction into **development with Docker**](./doc/docker_basics/introduction.md) as well as Docker-Compose and how you can [set it up in *Visual Studio Code*](./doc/docker_basics/VisualStudioCodeSetup.md), including a guide on how to use [*graphic user interfaces with Docker*](./doc/docker_basics/Gui.md) and tips on how to structure a [ROS workspace](./doc/docker_basics/Ros.md) with it.
+- Required settings for a **real-time capable container** with a **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start) patched host system**
+- **Benchmarking** your real-time performance by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
 
-- It provies a brief [introduction into development with Docker](./doc/docker_basics/introduction.md) as well as Docker-Compose generally and how you can [set it up in *Visual Studio Code*](./doc/docker_basics/VisualStudioCodeSetup.md), including a guide on how to use [*graphic user interfaces with Docker*](./doc/docker_basics/Gui.md) and tips on how to structure a [ROS workspace](./doc/docker_basics/Ros.md) with it.
-- Give an [*overview of different real-time Linux approaches*](./doc/realtime_basics/RealTimeLinux.md), their advantages and disadvantages
-- Walk you through the [*installation of `PREEMPT_RT`*](./doc/realtime_basics/PreemptRt.md) and supply a simple [*script for automatically re-compiling the kernel*](./compile_kernel_preemptrt.sh)
-- Discusses [*control groups*](./doc/docker_realtime/ControlGroups.md), another common approach for real-time Linux and how to get it up and running with Docker
-- *Benchmarking your real-time performance* by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
+This can be useful for several different applications, in particular:
 
-Therefore the guide should be useful for people interested in having real-time capable code inside a Docker as well as people just starting with Docker, in particular for robotics. If you fall into the latter category or simply want to revisit the Docker and Docker-Compose basics first, have a look at the guide [`doc/docker_basics/Introduction.md`](./doc/docker_basics/Introduction.md) and find out how you can use them conveniently in Visual Studio Code [`doc/docker_basics/VisualStudioCodeSetup.md`](./doc/docker_basics/VisualStudioCodeSetup.md).
+- Controlling **real-time robotics hardware** from Linux systems, e.g. over EtherCAT (by using EtherCAT masters such as [SOEM](https://github.com/OpenEtherCATsociety/SOEM) or [IgH](https://etherlab.org/en/ethercat/)) or setting up containers for other robotic components such as the [Franka Emika Panda](https://www.franka.de/) collaborative robotic arm
+- **Numerical control** by turning your desktop or single-board computer into a SoftPLC e.g. with [CodeSYS Control](https://www.codesys.com/products/codesys-runtime/control.html) or using [LinuxCNC](http://linuxcnc.org/)
+
+but may also apply to software developers developing any other form of real-time capable code.
+
+
 
 ## 1. Real-time Docker
 
-When developing with Docker one soon realizes that it simplifies software development immensely but that there are some topics which are very relevant but one can't find much information on, for example how to launch graphic user interfaces from inside a Docker (refer to [`doc/docker_basics/Gui.md`](./doc/docker_basics/Gui.md) if you are interested in it) or how to run real-time processes from inside a Docker. These limitations are actually by design but might not be desirable for certain applications.
+There are different ways of turning a vanilla Linux system into a real-time capable operating system. As outlined in [`doc/realtime_basics/RealTimeLinux.md`](./doc/realtime_basics/RealTimeLinux.md) **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start)** is likely the most future-proof possibility as it is about to be included into the mainline of Linux.
 
-For real-time operating systems there exist several different approaches with different characteristics (see [`doc/realtime_basics/RealTimeLinux.md`](./doc/realtime_basics/RealTimeLinux.md) for a comparison). When looking at the official Docker documentation you will come across `cgroups` (see [`doc/docker_realtime/ControlGroups.md`](./doc/docker_realtime/ControlGroups.md) on how to set this up), which from my experience are not useful for robotics applications due to high jitter. Another common approach, which is used by [Franka Emika](https://frankaemika.github.io/docs/installation_linux.html), is actually the `PREEMPT_RT` patch. As outlined in [`doc/realtime_basics/RealTimeLinux.md`](./doc/realtime_basics/RealTimeLinux.md) it is likely the most future-proof possibility as it is about to be included into the mainline of Linux.
-
-The set-up of a real-time capable Docker with `PREEMPT_RT` is particularly easy. All you need is:
+The set-up of a real-time capable Docker with `PREEMPT_RT` is quite straight forward. All you need is:
 
 - A **`PREEMPT_RT`-patched host operating system**
-- An arbitrary **Docker container** launched with the **`privileged`** option with a user that has real-time privileges on the host machine. If you want to have a low latency for network communication, such as for controlling Ethercat slaves, the `network=host` should reduce any overhead to a bare minimum.
+- An arbitrary **Docker container** launched with the correct options so that it can set real-time priorities from inside the container as well as options for reducing the network latency
 
 The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md)). You have two options, a custom re-compilation of the kernel or an installation from an existing Debian package. 
 
 ### 1.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt).
-
-[`src/install_debian_preemptrt`](./src/install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
 
 #### 1.1.1 Installation from pre-compiled Debian package (recommended)
 
@@ -78,18 +80,23 @@ After having patched your system and a restart booting into the freshly installe
 
 ### 1.3 Launching the Docker
 
-**After having successfully installed `PREEMPT_RT`**, it is sufficient to execute the Docker with the options **`--privileged --net=host`**, or the Docker-compose equivalent
+**After having successfully installed `PREEMPT_RT`**, it is sufficient to execute the Docker with the options:
 
 ```yaml
-privileged: true
+cap_add:
+  - SYS_NICE
+ulimits:
+  rtprio: 99
+  rttime: -1 # corresponds to 'unlimited'
+  memlock: 8428281856
 network_mode: host
 ```
 
-Launching the container as `privileged` and `net=host` should also help minimise the overhead as discussed [here](https://pythonspeed.com/articles/docker-performance-overhead/9) and [here](https://stackoverflow.com/a/26149994).
-
 Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line).
 
-## 2. Examples
+
+
+## 2. Example
 
 This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start) is run to assess the real-time performance of the system. You can compare the outcome to running it on your local system. There should be virtually no difference between the two.
 
@@ -106,5 +113,3 @@ $ ./mklatencyplot.bash
 ```
 
 This should create a latency histogram by measuring the difference between a thread's intended wake-up time and its actual wake up time. This measures any form of latency caused by hardware, firmware and operating system. For more information on this test refer to [OSADL](https://www.osadl.org/Create-a-latency-plot-from-cyclictest-hi.bash-script-for-latency-plot.0.html).
-
-The latency on most computers optimised for energy efficiency like laptops will be magnitudes larger than the one of a desktop system as can also clearly be seen [browsing the OSADL latency plots](https://www.osadl.org/Latency-plots.latency-plots.0.html). **It is therefore generally not advisable to use laptops for real-time tests** (with and without a Docker).
