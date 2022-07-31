@@ -35,6 +35,7 @@ RUN cd ${WS_DIR} \
  && rm -r ${RT_TESTS} \
  && rm ${RT_TESTS}.tar.xz \
  && curl -SLO --fail https://www.osadl.org/uploads/media/mklatencyplot.bash \
+# && sed -i -E "s/(cores=).*/\1\$(nproc)/" ${WS_DIR}/mklatencyplot.bash \
  && chmod +x mklatencyplot.bash
 
 ENV DEBIAN_FRONTEND=dialog
