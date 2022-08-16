@@ -1,6 +1,6 @@
 # Linux control groups inside Docker
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - August 2022)
 
 
 
@@ -33,7 +33,7 @@ Finally you can also launch the container with the real-time scheduler
 $ sudo docker run -it --cpu-rt-runtime=950000 --ulimit rtprio=99 --cap-add=sys_nice ubuntu:focal
 ```
 
-Similarly in a Docker-Compose file this can be achieved with (see [here](https://github.com/compose-spec/compose-spec/blob/master/spec.md#cpu_rt_runtime), [here](https://github.com/compose-spec/compose-spec/blob/master/spec.md#ulimits) as well as [here](https://github.com/ba-st/docker-pharo/blob/master/docs/rtprio.md) for more details):
+Similarly in a Docker-Compose file this can be achieved with (see [here](https://github.com/compose-spec/compose-spec/blob/master/spec.md#cpu_rt_runtime), [here](https://github.com/compose-spec/compose-spec/blob/master/spec.md#ulimits) as well as [here](https://github.com/ba-st/docker-pharo/blob/master/docs/rtprio.md) and [here](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) for more details):
 
 ```yml
 privileged: true

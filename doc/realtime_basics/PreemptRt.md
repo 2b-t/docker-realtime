@@ -148,6 +148,10 @@ Now it is time to build the kernel:
 
 Continue to restart the computer and boot into the newly installed kernel. Depending on the chosen installation procedure and BIOS set-up you **might have to turn off secure boot** in your UEFI BIOS menu or else you might not be able to boot. You can verify if you booted into the correct kernel by executing `$ uname -r` in the console. If set-up correctly your kernel should contain `rt` in its version and `/sys/kernel/realtime` should exist and contain the value `1`. In order to check if the kernel compiled correctly you can output the kernel flags with [this tool](https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh).
 
+#### 1.2.3 Real-time Ubuntu
+
+From Ubuntu 22.04 onwards there is a real-time kernel based on PREEMPT_RT already available out of the box. How it can be set-up is discussed in more detail [here](https://ubuntu.com/blog/real-time-ubuntu-released). You will need to register yourself but the kernel is then free for personal usage.
+
 ### 1.3 Allowing the user to set real-time permissions
 
 By default only your super-user will be able to set real-time priorities (see `$ ulimit -r`). In case you do not intend to use [`root` as the user inside the Docker](https://medium.com/jobteaser-dev-team/docker-user-best-practices-a8d2ca5205f4) you will have to remove this restriction and you will have add a group named `realtime` (the name of the group is your choice and you could also only add a single user instead of a dedicated group) and add our current user to it as described in the [Franka Emika Linux installation guide](https://frankaemika.github.io/docs/installation_linux.html). First execute
@@ -169,3 +173,7 @@ and then adapt the [PAM limits](https://wiki.gentoo.org/wiki/Project:Sound/How_t
 ```
 
 In this context `rtprio` is the maximum real-time priority allowed for non-privileged processes. The `hard` limit is the real limit to which the `soft` limit can be set to. The `hard` limits are set by the super-user and enforce by the kernel. The user cannot raise his code to run with a higher priority than the `hard` limit. The `soft` limit on the other hand is the default value limited by the `hard` limit. For more information on the parameters see e.g. [here](https://linux.die.net/man/5/limits.conf).
+
+### 1.4 Set real-time schedule
+
+The real-time schedule can be set from the command line with `chrt` as discussed [here](https://askubuntu.com/questions/51283/how-to-run-a-program-with-sched-rr-policy-from-command-line).

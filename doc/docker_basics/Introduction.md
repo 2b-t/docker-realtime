@@ -205,18 +205,22 @@ where `<docker_name>` is given by the name specified in the `docker-compose.yml`
 
 If you have followed this guide so far, then you should have understood the basics of Docker. There are still some topics I would like to discuss that might be helpful for others. This section links to the corresponding documents.
 
-### 6.1 Graphic user interfaces
+### 6.1 Users and safety
+
+A few problems emerge with user rights when working from a Docker as discussed [in this Stackoverflow post](https://stackoverflow.com/questions/68155641/should-i-run-things-inside-a-docker-container-as-non-root-for-safety) and in more detail [here](https://jtreminio.com/blog/running-docker-containers-as-current-host-user/). As outlined in the last post there are ways to work around this, passing the current user id and group as input arguments to the container. In particular with Docker-Compose one might default to the root user or change to the current user if [arguments are supplied](https://stackoverflow.com/questions/34322631/how-to-pass-arguments-within-docker-compose). I use Dockers in particular for developing and I am not too bothered about being super-user inside the container. If you are then have a look at the linked posts as well as the [Visual Studio Code guide on this](https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user).
+
+### 6.2 Graphic user interfaces
 
 As pointed out earlier Docker was never intended for graphic user interfaces but that does not mean that they can't be done. It is particularly useful for development with ROS. The disadvantage of it is though that there is no real portable way of doing so. It highly depends on the operating system that you are using and the manufacturer of your graphics card. The document [`Gui.md`](./Gui.md) discusses a simple way of doing so.
 
-### 6.2 Real-time code
+### 6.3 Real-time code
 
-As mentioned another point that is often not discussed is what steps are necessary for running real-time code from inside a Docker. This is what the rest of the documents in this repository is concerned with.
+As mentioned another point that is often not discussed is what steps are necessary for running real-time code from inside a Docker. This is what the rest of the documents in this repository is concerned with. As outlined in [this IBM research report](https://domino.research.ibm.com/library/cyberdig.nsf/papers/0929052195DD819C85257D2300681E7B/$File/rc25482.pdf), the impact of Docker on the performance can be very low if launched with the correct options.
 
-### 6.3 ROS inside Docker
+### 6.4 ROS inside Docker
 
 Working with the Robot Operating System (ROS) might pose particular challenges. I have written down some notes of how I generally structure my Dockers in [`Ros.md`](./Ros.md).
 
-### 6.4 Setting up Visual Studio Code
+### 6.5 Setting up Visual Studio Code
 
 In the last few years Microsoft Visual Studio Code has become the most used editor, potentially becoming the first Microsoft product to be widely accepted by programmers. The guide [`VisualStudioCodeSetup.md`](./VisualStudioCodeSetup.md) walks you through the set-up of a Docker with Visual Studio Code.
