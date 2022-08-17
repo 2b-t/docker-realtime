@@ -207,7 +207,9 @@ If you have followed this guide so far, then you should have understood the basi
 
 ### 6.1 Users and safety
 
-A few problems emerge with user rights when working from a Docker as discussed [in this Stackoverflow post](https://stackoverflow.com/questions/68155641/should-i-run-things-inside-a-docker-container-as-non-root-for-safety) and in more detail [here](https://jtreminio.com/blog/running-docker-containers-as-current-host-user/). As outlined in the last post there are ways to work around this, passing the current user id and group as input arguments to the container. In particular with Docker-Compose one might default to the root user or change to the current user if [arguments are supplied](https://stackoverflow.com/questions/34322631/how-to-pass-arguments-within-docker-compose). I use Dockers in particular for developing and I am not too bothered about being super-user inside the container. If you are then have a look at the linked posts as well as the [Visual Studio Code guide on this](https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user).
+A few problems emerge with user rights when working from a Docker as discussed [in this Stackoverflow post](https://stackoverflow.com/questions/68155641/should-i-run-things-inside-a-docker-container-as-non-root-for-safety) and in more detail [in this blog post](https://jtreminio.com/blog/running-docker-containers-as-current-host-user/). As outlined in the latter, there are ways to work around this, passing the current user id and group as input arguments to the container. In analogy with Docker-Compose one might default to the root user or change to the current user if [arguments are supplied](https://stackoverflow.com/questions/34322631/how-to-pass-arguments-within-docker-compose).
+
+I personally use Dockers in particular for developing and I am not too bothered about being super-user inside the container. If you are then have a look at the linked posts as well as the [Visual Studio Code guide on this](https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user).
 
 ### 6.2 Graphic user interfaces
 

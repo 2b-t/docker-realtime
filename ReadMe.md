@@ -2,7 +2,7 @@
 
 # Docker real-time guide for `PREEMPT_RT`
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - July 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - August 2022)
 
 
 
@@ -12,10 +12,10 @@ This is guide explains how one can **develop inside a [Docker container](https:/
 
 - **Basics of real-time systems** and an [*overview of different real-time Linux approaches*](./doc/realtime_basics/RealTimeLinux.md)
 - **Set-up** of a real-time system, in particular the [*installation of `PREEMPT_RT`*](./doc/realtime_basics/PreemptRt.md) supplying simple [*scripts for automatically re-compiling the kernel*](./src/compile_kernel_preemptrt)
-- Possible **optimisations** of a real-time system in order to minimise the latency
+- [Possible **optimizations**](./doc/realtime_basics/RealTimeOptimizations.md) of a real-time system in order to minimise the latency
 - [Introduction into **development with Docker**](./doc/docker_basics/introduction.md) as well as Docker-Compose and how you can [set it up in *Visual Studio Code*](./doc/docker_basics/VisualStudioCodeSetup.md), including a guide on how to use [*graphic user interfaces with Docker*](./doc/docker_basics/Gui.md) and tips on how to structure a [ROS workspace](./doc/docker_basics/Ros.md) with it.
 - Required settings for a **real-time capable container** with a **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start) patched host system**
-- **Benchmarking** your real-time performance by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
+- **Benchmarking** the real-time performance by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
 
 This can be useful for several different applications, in particular:
 
@@ -32,14 +32,14 @@ There are different ways of turning a vanilla Linux system into a real-time capa
 
 The set-up of a real-time capable Docker with `PREEMPT_RT` is quite straight forward. All you need is:
 
-- A **`PREEMPT_RT`-patched host operating system**
+- A **`PREEMPT_RT`-patched Linux host operating system**
 - An arbitrary **Docker container** launched with the correct options so that it can set real-time priorities from inside the container as well as options for reducing the network latency
 
-The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md)). You have two options, a custom re-compilation of the kernel or an installation from an existing Debian package. 
+The manual set-up of `PREEMPT_RT` takes quite a while (see [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md)). You have two options, a custom re-compilation of the kernel or an installation from an existing Debian package.
 
 ### 1.1 Installing `PREEMPT_RT`
 
-The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) checks online if there are already precompiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) compiles the kernel from scratch from you and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
+The installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) is lined out in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt). [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) checks online if there are already pre-compiled `PREEMPT_RT` packages available and lets you select a suiting version graphically, while [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) compiles the kernel from scratch and installs it. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
 
 #### 1.1.1 Installation from pre-compiled Debian package (recommended)
 
@@ -54,7 +54,7 @@ Afterwards you can reboot your system (be sure to select the correct kernel!) an
 
 #### 1.1.2 Compilation of the kernel
 
-If the installation above fails or for some good reason you have to compile the kernel yourself you can use the [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) script.
+If the installation above fails (or for some good reason you have to compile the kernel yourself) you can use the [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) script.
 
 You can launch it in two different ways:
 
@@ -72,15 +72,15 @@ $ cd src
 $ sudo ./compile_kernel_preemptrt 5.10.78-rt55
 ```
 
-This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
+This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers to be passed as arguments can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
 
 ### 1.2 Setting up real-time privileges
 
-After having patched your system and a restart booting into the freshly installed kernel (see [`doc/realtime_basics/ChangeBootOrder.md`](./doc/realtime_basics/ChangeBootOrder.md)) you should already be good to go to launch a real-time capable Docker with `sudo`. In case you do not intend to use [`root` as the user inside the Docker](https://medium.com/jobteaser-dev-team/docker-user-best-practices-a8d2ca5205f4) you furthermore will have to have give yourself a name of a user that belongs to a group with **real-time privileges on your host computer**. How this can be done can be found in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md).
+After having patched your system and restarted it, booting into the freshly installed kernel (see [`doc/realtime_basics/ChangeBootOrder.md`](./doc/realtime_basics/ChangeBootOrder.md)), you should already be good to go to launch a real-time capable Docker. In case you do not intend to use [`root` as the user inside the Docker](https://medium.com/jobteaser-dev-team/docker-user-best-practices-a8d2ca5205f4) you furthermore will have to have give yourself a name of a user that belongs to a group with **real-time privileges on your host computer**. How this can be done can be found in [`doc/realtime_basics/PreemptRt.md`](./doc/realtime_basics/PreemptRt.md).
 
 ### 1.3 Launching the Docker
 
-**After having successfully installed `PREEMPT_RT`**, it is sufficient to execute the Docker with the options:
+**After having successfully installed `PREEMPT_RT`**, it is sufficient to execute the Docker [with the options](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities):
 
 ```yaml
 cap_add:

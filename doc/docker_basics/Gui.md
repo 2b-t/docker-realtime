@@ -1,6 +1,6 @@
-# Graphic user interfaces (GUIs) inside Docker
+# Graphic user interfaces inside Docker
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - August 2022)
 
 
 
@@ -13,7 +13,7 @@ Running user interfaces from inside a Docker might not be its intended usage but
 
 ## 2. Using X-Server
 
-As pointed out before this guide uses the Ubuntu X-Server for outputting dialogs from a Docker. The Docker-Compose file with and without Nvidia hardware acceleration look differently and Nvidia hardware acceleration requires a few additional setup steps. These differences are briefly outlined in the sections below. It is worth mentioning that **just having an Nvidia card does not necessitate the Nvidia setup** but nstead what matters is the **driver** used for the graphics card. If you are using a Nouveau driver for an Nvidia card then a Docker-Compose file written for hardware acceleration won't work and instead you will have to turn to the Docker-Compose file without it. And vice versa, if your card is managed by the Nvidia driver then the first approach won't work for you. This fact is in particular important for the `PREEMPT_RT` patch: You won't be able to use your Nvidia driver when running the patch. Your operating system might mistakenly tell you that it is using the Nvidia driver but it might not. It is therefore important to check the output of `$ nvidia-smi`. If it outputs a managed graphics card, then you will have to go for the second approach with hardware acceleration. If it does not output anything or is not even installed go for the Nouveau driver setup.
+As pointed out before this guide uses the Ubuntu X-Server for outputting dialogs from a Docker. The Docker-Compose file with and without Nvidia hardware acceleration look differently and Nvidia hardware acceleration requires a few additional setup steps. These differences are briefly outlined in the sections below. It is worth mentioning that **just having an Nvidia card does not necessitate the Nvidia setup** but instead what matters is the **driver** used for the graphics card. If you are using a Nouveau driver for an Nvidia card then a Docker-Compose file written for hardware acceleration won't work and instead you will have to turn to the Docker-Compose file without it. And vice versa, if your card is managed by the Nvidia driver then the first approach won't work for you. This fact is in particular important for the `PREEMPT_RT` patch: You won't be able to use your Nvidia driver when running the patch. Your operating system might mistakenly tell you that it is using the Nvidia driver but it might not. It is therefore important to check the output of `$ nvidia-smi`. If it outputs a managed graphics card, then you will have to go for the second approach with hardware acceleration. If it does not output anything or is not even installed go for the Nouveau driver setup.
 
 In any case before being able to stream to the X-Server on the host system you will have to run the following command inside the **host system**:
 
@@ -141,10 +141,10 @@ on top of that goes another Docker-Compose file with Nvidia acceleration `docker
 ```yaml
 version: "3.9"
 services:
-  stereo_matching_docker:
+  some_name:
     extends:
       file: docker-compose-gui.yml
-      service: stereo_matching_docker
+      service: some_name
     environment:
      - NVIDIA_VISIBLE_DEVICES=all
     runtime: nvidia
@@ -155,10 +155,10 @@ and finally I have yet another file which can be launched for hardware accelerat
 ```yaml
 version: "3.9"
 services:
-  stereo_matching_docker:
+  some_name:
     extends:
       file: docker-compose.yml
-      service: stereo_matching_docker
+      service: some_name
     environment:
      - NVIDIA_VISIBLE_DEVICES=all
     runtime: nvidia
