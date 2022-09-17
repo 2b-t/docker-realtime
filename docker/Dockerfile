@@ -5,7 +5,7 @@ WORKDIR ${WS_DIR}
 
 SHELL ["/bin/bash", "-c"]
 
-ENV DEBIAN_FRONTEND=noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Dependencies for latency plot
 RUN apt-get update && apt-get install -y \
@@ -38,5 +38,5 @@ RUN cd ${WS_DIR} \
 # && sed -i -E "s/(cores=).*/\1\$(nproc)/" ${WS_DIR}/mklatencyplot.bash \
  && chmod +x mklatencyplot.bash
 
-ENV DEBIAN_FRONTEND=dialog
+ARG DEBIAN_FRONTEND=dialog
 
