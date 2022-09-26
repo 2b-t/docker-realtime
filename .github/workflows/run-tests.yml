@@ -8,7 +8,7 @@ on:
       - 'src/**'
       - 'test/**'
   schedule:
-    - cron: "0 0 12 1 * ?"
+    - cron: "0 12 1 * *"
 
 jobs:
   docker-compose-build:
