@@ -2,7 +2,7 @@
 
 # Docker real-time guide for `PREEMPT_RT`
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - August 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - September 2022)
 
 
 
@@ -26,7 +26,7 @@ but may also apply to software developers developing any other form of real-time
 
 
 
-## 1. Real-time Docker
+## 1. Docker for real-time applications
 
 There are different ways of turning a vanilla Linux system into a real-time capable operating system. As outlined in [`doc/realtime_basics/RealTimeLinux.md`](./doc/realtime_basics/RealTimeLinux.md) **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start)** is likely the most future-proof possibility as it is about to be included into the mainline of Linux.
 
