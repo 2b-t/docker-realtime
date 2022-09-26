@@ -7,6 +7,8 @@ on:
       - 'docker/docker-compose.yml'
       - 'src/**'
       - 'test/**'
+  schedule:
+    - cron: "0 0 12 1 * ?"
 
 jobs:
   docker-compose-build:
