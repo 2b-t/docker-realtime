@@ -1,12 +1,14 @@
 # ROS inside Docker
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - September 2022)
 
 
 
 ## 1. ROS with Docker
 
-The ROS Wiki offers tutorials on ROS and Docker [here](http://wiki.ros.org/docker/Tutorials). A list of important commands can be found [here](https://tuw-cpsg.github.io/tutorials/docker-ros/). After installing Docker one simply pulls an image of ROS, specifying the version tag:
+I personally think that Docker is a good choice for **developing** robotic applications as it allows you to quickly switch between different projects but **less so for deploying** software. Refer to [this Canonical article](https://ubuntu.com/blog/ros-docker) to more details about the drawbacks of deploying software with Docker, in particular regarding security. For the deployment I personally would rather turn to Debian or Snap packages (see e.g. [Bloom](http://wiki.ros.org/bloom/Tutorials/FirstTimeRelease)).
+
+The ROS Wiki offers tutorials on ROS and Docker [here](http://wiki.ros.org/docker/Tutorials), there is also a very useful [tutorial paper](https://www.researchgate.net/publication/317751755_ROS_and_Docker) out there and another interesting article can be found [here](https://roboticseabass.com/2021/04/21/docker-and-ros/). Furthermore a list of important commands can be found [here](https://tuw-cpsg.github.io/tutorials/docker-ros/). After installing Docker one simply pulls an image of ROS, specifying the version tag:
 
 ```bash
 $ sudo docker pull ros
@@ -71,3 +73,7 @@ You can test this by sourcing the environment, launching a `roscore` on your loc
 ### 1.3 Docker configurations
 
 You will find quite a few Docker configurations for ROS online, in particular [this one](https://github.com/athackst/vscode_ros2_workspace) for ROS2 is quite well made.
+
+### 1.4 Larger software stacks
+
+When working with larger software stacks tools like [Docker-Compose](https://docs.docker.com/compose/) and [Docker Swarm](https://docs.docker.com/engine/swarm/stack-deploy/) might be useful for **orchestration**.
