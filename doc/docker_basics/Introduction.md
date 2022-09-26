@@ -1,6 +1,6 @@
 # Introduction to Docker
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - September 2022)
 
 
 
@@ -226,3 +226,7 @@ Working with the Robot Operating System (ROS) might pose particular challenges. 
 ### 6.5 Setting up Visual Studio Code
 
 In the last few years Microsoft Visual Studio Code has become the most used editor, potentially becoming the first Microsoft product to be widely accepted by programmers. The guide [`VisualStudioCodeSetup.md`](./VisualStudioCodeSetup.md) walks you through the set-up of a Docker with Visual Studio Code.
+
+### 6.6 Multi-stage builds
+
+Another interesting topic for **slimming down the resulting containers** are [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) where only the files necessary for running are kept and every unnecessary ballast is removed.
