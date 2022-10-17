@@ -6,8 +6,7 @@
 
 function install_dependencies() {
   declare desc="Install the missing dependencies for the PREEMPT_RT installation from a Debian package"
-  sudo apt-get install -y grep curl sed
-  sudo apt-get install -y build-essential bc ca-certificates gnupg2 libssl-dev lsb-release libelf-dev bison flex dwarves zstd libncurses-dev dpkg-dev
+  sudo apt-get install -y curl dialog dpkg-dev grep sed
 }
 
 function get_debian_versions() {
