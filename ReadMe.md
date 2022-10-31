@@ -86,15 +86,13 @@ After having patched your system and restarted it, booting into the freshly inst
 cap_add:
   - SYS_NICE
 ulimits:
-  rtprio: 99
+  rtprio: 98
   rttime: -1 # corresponds to 'unlimited'
   memlock: 8428281856
 network_mode: host
 ```
 
-Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line).
-
-
+Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line). Note: [do NOT](https://github.com/ros2-realtime-demo/pendulum/blob/rolling/docs/real_time_linux.md#setting-permissions-for-the-scheduler) set rtprio to 99.
 
 ## 2. Example
 

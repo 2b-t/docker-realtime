@@ -39,7 +39,7 @@ Similarly in a Docker-Compose file this can be achieved with (see the official D
 privileged: true
 cpu_rt_runtime: 950000
 ulimits:
-  rtprio: 99
+  rtprio: 98
 ```
 
 The real-time runtime `cpu.rt_runtime_us` allocated for each group can be inspected in `/sys/fs/cgroup/cpu,cpuacct`. In case you have already allocated a large portion of real-time runtime to another cgroup this might result in the error message `failed to write 95000 to cpu.rt_runtime_us: write /sys/fs/cgroup/cpu,cpuacct/system.slice/.../cpu.rt_runtime_us: invalid argument` or similar (as discussed [here](https://stackoverflow.com/questions/28493333/error-writing-to-cgroup-parameter-cpu-rt-runtime-us) and [here](https://github.com/moby/moby/issues/31411)). For more details on control groups in Linux see [here](https://www.kernel.org/doc/html/latest/scheduler/sched-rt-group.html) and [here](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html). Now any process that is launched should be assigned to the corresponding real-time control group.

@@ -9,7 +9,7 @@ services:
     cap_add:
       - SYS_NICE
     ulimits:
-      rtprio: 99
+      rtprio: 98
       rttime: -1
       memlock: 8428281856
     network_mode: host
