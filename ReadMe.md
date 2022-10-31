@@ -92,9 +92,7 @@ ulimits:
 network_mode: host
 ```
 
-Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line).
-
-
+Then **any process from inside the Docker can set real-time priorities `rtprio`** (e.g. by calling [`::pthread_setschedparam`](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html) from inside the C/C++ code or by using [`chrt`](https://askubuntu.com/a/51285) from the command line). Note: [do NOT](https://github.com/ros2-realtime-demo/pendulum/blob/rolling/docs/real_time_linux.md#setting-permissions-for-the-scheduler) setting rtprio to 99 might be undesirable/dangerous in some cases.
 
 ## 2. Example
 
