@@ -21,6 +21,7 @@ This can be useful for several different applications, in particular:
 
 - Controlling **real-time robotics hardware** from Linux systems, e.g. over EtherCAT (by using EtherCAT masters such as [SOEM](https://github.com/OpenEtherCATsociety/SOEM) or [IgH](https://etherlab.org/en/ethercat/)) or setting up containers for other robotic components such as the [Franka Emika Panda](https://www.franka.de/) collaborative robotic arm
 - **Numerical control** by turning your desktop or single-board computer into a SoftPLC e.g. with [CodeSYS Control](https://www.codesys.com/products/codesys-runtime/control.html) or using [LinuxCNC](http://linuxcnc.org/)
+- **Real-time programming in audio development** such as with [Juce](https://juce.com/discover/stories/real-time-programming-in-audio-development)
 
 but may also apply to software developers developing any other form of real-time capable code.
 
