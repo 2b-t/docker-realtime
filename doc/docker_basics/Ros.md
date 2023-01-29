@@ -64,11 +64,23 @@ Sometimes you want to run nodes inside the Docker and communicate with a ROS mas
 11      - ROS_HOSTNAME=localhost
 ```
 
-where in this case `localhost` stands for your local machine (the loop-back device `127.0.0.1`).
+where in this case `localhost` stands for your local machine (the loop-back device `127.0.0.1`). If the Docker should act as the master this might be more complicated and one might have to turn to virtual networking in Linux as described [here](https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking).
 
-If the Docker should act as the master this might be more complicated and one might have to turn to virtual networking in Linux as described [here](https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking).
+#### 1.2.1 Multiple machines
+
+In case you want the Docker to communicate with another device on the network be sure to activate the option
+
+```bash
+15    network_mode: host
+```
+
+as well. Make sure that pinging works **in both directions**. In case your set-up is faulty pinging might only work in a single direction. Refer to the [ROS network setup guide](https://wiki.ros.org/ROS/NetworkSetup) to see how to use named connections instead of the IP and on more information on this topic. In particular for time synchronization of multiple machines it should be possible to run [`chrony`](https://robofoundry.medium.com/how-to-sync-time-between-robot-and-host-machine-for-ros2-ecbcff8aadc4) from inside a container without any issues. After setting it up use `$ chronyc sources` as well as `$ chronyc tracking` to verify the correct set-up.
 
 You can test this by sourcing the environment, launching a `roscore` on your local or remote computer, then launch the Docker source the local environment and see if you can see any topics inside `$ rostopic list`. Then you can start publishing a topic `$ rostopic pub /testing std_msgs/String "Testing..." -r 10` on one side (either Docker or host) and check if you receive the messages on the other side with `$ rostopic echo /testing`.
+
+#### 1.2.2 Combining different package and ROS versions
+
+Combining different ROS versions is not officially supported but largely works as long as message definitions have not changed. This is problematic with constantly evolving packages such as [Moveit](https://moveit.ros.org/). The interface between the containers in this case has to be chosen wisely such that the used messages do not change across between the involved distributions. You can use [`rosmsg md5 <message_type>`](https://wiki.ros.org/rosmsg#rosmsg_md5) in order to verify quickly if the message definitions have changed: If the two `md5` hashes are the same then the two distributions should be able to communicate via this message.
 
 ### 1.3 Docker configurations
 
