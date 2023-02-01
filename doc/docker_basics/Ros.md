@@ -72,11 +72,43 @@ In case you want the Docker to communicate with another device on the network be
 
 ```bash
 15    network_mode: host
+16    extra_hosts:
+17      - "my_device:192.168.100.1"
 ```
 
-as well. Make sure that pinging works **in both directions**. In case your set-up is faulty pinging might only work in a single direction. Refer to the [ROS network setup guide](https://wiki.ros.org/ROS/NetworkSetup) to see how to use named connections instead of the IP and on more information on this topic. In particular for time synchronization of multiple machines it should be possible to run [`chrony`](https://robofoundry.medium.com/how-to-sync-time-between-robot-and-host-machine-for-ros2-ecbcff8aadc4) from inside a container without any issues. After setting it up use `$ chronyc sources` as well as `$ chronyc tracking` to verify the correct set-up.
+as well, where `my_device` corresponds to the host name followed by its IP. The **`extra_hosts`** option basically adds another entry to your **`/etc/hosts` file inside the container**, similar to what you would do manually normally in the [ROS network setup guide](https://wiki.ros.org/ROS/NetworkSetup).
 
-You can test this by sourcing the environment, launching a `roscore` on your local or remote computer, then launch the Docker source the local environment and see if you can see any topics inside `$ rostopic list`. Then you can start publishing a topic `$ rostopic pub /testing std_msgs/String "Testing..." -r 10` on one side (either Docker or host) and check if you receive the messages on the other side with `$ rostopic echo /testing`.
+Make sure that pinging works **in both directions**. ROS relies on the correct host name being set: If it does not correspond to the name of the remote computer the communication won't work. In case your set-up is faulty, pinging might only work in one direction. If you would continue with your set-up you might be able to receive information (e.g. visualize the robot and its sensors) but not send it (e.g. command the robot). In particular for time synchronization of multiple machines it should be possible to run [`chrony`](https://robofoundry.medium.com/how-to-sync-time-between-robot-and-host-machine-for-ros2-ecbcff8aadc4) from inside a container without any issues. After setting it up use `$ chronyc sources` as well as `$ chronyc tracking` to verify the correct set-up.
+
+You can test the communication between the two machines by sourcing the environment, launching a `roscore` on your local or remote computer, then launch the Docker source the local environment and see if you can see any topics inside `$ rostopic list`. Then you can start publishing a topic `$ rostopic pub /testing std_msgs/String "Testing..." -r 10` on one side (either Docker or host) and check if you receive the messages on the other side with `$ rostopic echo /testing`. If that works fine you should be ready to go.
+
+As a best practice I normally use a  [`.env` file](https://vsupalov.com/docker-arg-env-variable-guide/) that I place in the same folder as the `Dockerfile` and the `docker-compose.yaml` containing the IPs:
+
+```bash
+REMOTE_IP="192.168.100.1"
+REMOTE_HOSTNAME="some_host"
+LOCAL_IP="192.168.100.2"
+```
+
+The IPs inside this file can then be modified and are used inside the Docker-Compose file to set-up the container: The `/etc/hosts` file as well as the `ROS_MASTER_URI` and the `ROS_HOSTNAME`:
+
+```yaml
+version: "3.9"
+services:
+  ros_docker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      - ROS_MASTER_URI=http://${REMOTE_IP}:11311
+      - ROS_HOSTNAME=${LOCAL_IP}
+    network_mode: "host"
+    extra_hosts:
+      - "${REMOTE_HOSTNAME}:${REMOTE_IP}"
+    tty: true
+    volumes:
+      - ../src:/ros_ws/src
+```
 
 #### 1.2.2 Combining different package and ROS versions
 
