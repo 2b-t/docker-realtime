@@ -194,6 +194,18 @@ function unsign_kernel_configuration() {
   find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_SYSTEM_REVOCATION_KEYS" '""'
 }
 
+function set_recommended_preemptrt_settings() {
+  declare desc="Set recommended PREEMPT_RT kernel configuration"
+  local KERNEL_CONFIG_FILE=".config"
+  comment_out_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_HZ_250"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_HZ_1000" "y"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_HZ" "1000"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_NO_HZ_IDLE" "y"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_NO_HZ" "y"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_HIGH_RES_TIMERS" "y"
+  find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_CPU_ISOLATION" "y"
+}
+
 function select_installation_mode() {
   declare desc="Select installation modality"
   echo $(dialog --keep-tite --stdout --default-item "Debian package" --menu "Select the desired installation mode:" 0 0 5 "Debian" "Debian package" "Classic" "Install directly")

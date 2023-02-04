@@ -31,8 +31,13 @@ function install_kernel_interactive() {
   apply_patch_to_kernel "${PREEMPTRT_FILE}" "${KERNEL_FILE}"
   generate_new_kernel_configuration
   success_msg "Patch applied successfully!"
+
+  info_msg "Setting recommended PREEMPT_RT settings..."
+  set_recommended_preemptrt_settings
   info_msg "Forcing unsigned kernel..."
   unsign_kernel_configuration
+  info_msg "Override any settings if desired, else simply exit the menu..."
+  make menuconfig
 
   local INSTALLATION_MODE=$(select_installation_mode)
   if [ "${INSTALLATION_MODE}" == "Debian" ]
@@ -69,6 +74,7 @@ function install_kernel_noninteractive() {
   local PREEMPTRT_FILE=$(download_and_extract_preemptrt "${PREEMPTRT_FULL_VERSION}")
   apply_patch_to_kernel "${PREEMPTRT_FILE}" "${KERNEL_FILE}"
   generate_new_kernel_configuration
+  set_recommended_preemptrt_settings
   unsign_kernel_configuration
   generate_preemptrt_kernel_debian_package
   install_preemptrt_kernel_debian_package "${PREEMPTRT_FULL_VERSION}"
