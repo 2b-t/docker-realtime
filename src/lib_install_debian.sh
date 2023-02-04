@@ -17,7 +17,8 @@ function get_debian_versions() {
 function get_preemptrt_file() {
   declare desc="Get the PREEMPT_RT filename for the given Debian distribution by crawling the website"
   local DEBIAN_VERSION=$1
-  echo $(curl -Ls https://packages.debian.org/${DEBIAN_VERSION}/$(dpkg --print-architecture)/linux-image-rt-$(dpkg --print-architecture)/download | grep -o -P '(?<=<h2>Download Page for <kbd>)(linux-image-rt.*)(?=<\/kbd>)')
+  local ARCHITECTURE=$(dpkg --print-architecture)
+  echo $(curl -Ls https://packages.debian.org/${DEBIAN_VERSION}/${ARCHITECTURE}/linux-image-rt-${ARCHITECTURE}/download | grep -o -P '(?<=<h2>Download Page for <kbd>)(linux-image-rt.*)(?=<\/kbd>)')
 }
 
 function select_debian_version() {
