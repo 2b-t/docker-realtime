@@ -2,7 +2,7 @@
 
 # Docker real-time guide for `PREEMPT_RT`
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - September 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - February 2023)
 
 
 
@@ -23,7 +23,7 @@ This can be useful for several different applications, in particular:
 - **Numerical control** by turning your desktop or single-board computer into a SoftPLC e.g. with [CodeSYS Control](https://www.codesys.com/products/codesys-runtime/control.html) or using [LinuxCNC](http://linuxcnc.org/)
 - **Real-time programming in audio development** such as with [Juce](https://juce.com/discover/stories/real-time-programming-in-audio-development)
 
-but may also apply to software developers developing any other form of real-time capable code.
+but may also apply to software developers developing any other form of real-time capable code. This guide does not apply to Windows and Macintosh operating systems as it relies on a `PREEMPT_RT`-patched host system.
 
 
 
@@ -97,7 +97,10 @@ Then **any process from inside the Docker can set real-time priorities `rtprio`*
 
 ## 2. Example
 
-This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start) is run to assess the real-time performance of the system. You can compare the outcome to running it on your local system. There should be virtually no difference between the two.
+This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start) is run to assess the real-time performance of the system. You can compare the outcome to running it on your local system. There should be virtually no difference between the two, as can be seen from the graphs below:
+
+| ![On host operating system](media/p500_cstates_off.png) | ![Inside Docker](media/p500_docker_cstates_off.png) |
+| ------------------------------------------------------- | --------------------------------------------------- |
 
 For launching the `cyclictest` open the Docker by typing
 

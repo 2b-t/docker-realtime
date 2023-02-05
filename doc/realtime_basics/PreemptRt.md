@@ -1,6 +1,6 @@
 # `PREEMPT_RT` set-up
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
+Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - February 2023)
 
 ## 1. Setting-up `PREEMPT_RT`
 
@@ -96,7 +96,19 @@ and **generate a new configuration** `.config` file with
 $ make oldconfig
 ```
 
-Go ahead and **change the relevant configuration parameters** if you want to. This can be done graphically with `$ make xconfig`, `$ make menuconfig` or manually by modifying the `.config` file located inside `linux-${KERNEL_VER_FULL}`. The [German Open Source Automation Development Lab (OSADL) ](https://www.osadl.org/) performs long-term tests on several kernel versions and publishes the results on the internet. One might want to use these parameters instead rather than working with his/her own `.config` file. An overview of the corresponding systems can be found [here](https://www.osadl.org/Real-time-optimization.qa-farm-latency-optimization.0.html) and the configuration file for a particular system can be downloaded (e.g. [this one](https://www.osadl.org/?id=1087#kernel)).
+Go ahead and **change the relevant configuration parameters** if you want to. This can be done graphically with `$ make xconfig`, `$ make menuconfig` or manually by modifying the `.config` file located inside `linux-${KERNEL_VER_FULL}`. The [German Open Source Automation Development Lab (OSADL) ](https://www.osadl.org/) performs long-term tests on several kernel versions and publishes the results on the internet. One might want to use these parameters instead rather than working with his/her own `.config` file. An overview of the corresponding systems can be found [here](https://www.osadl.org/Real-time-optimization.qa-farm-latency-optimization.0.html) and the configuration file for a particular system can be downloaded (e.g. [this one](https://www.osadl.org/?id=1087#kernel)). If you set incompatible flags they might be reset later on. As soon as the kernel compilation starts **check the `.config` file if your desired settings are still set** or if they were implicitly discarded. If you want to see what the configuration of your current kernel looks like [type `$ cat /boot/config-$(uname -r)` in your console](https://www.baeldung.com/linux/kernel-config). 
+
+I personally generally use the following settings:
+
+```shell
+# Find and replace
+CONFIG_HZ_1000=y # Requires to comment the other entries such as CONFIG_HZ=250
+CONFIG_HZ=1000
+CONFIG_NO_HZ_IDLE=y
+CONFIG_NO_HZ=y
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_CPU_ISOLATION=y
+```
 
 For a successful installation I have to change the following parameters inside the `.config` file:
 
