@@ -30,7 +30,9 @@ The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a sy
 
 ### 1.1 Known issues
 
-The `PREEMPT_RT` kernels are known for causing a headache with the **official Nvidia graphics driver**, at least the binary versions of it. Please have a look yourself before deciding to continue if you have an Nvidia GPU. Potentially you might end up with the Nouveau Linux graphics driver potentially with a lower refresh rate or lower resolution and for laptops you might lose access to your external display depending on the precise computer architecture and graphics card.
+The `PREEMPT_RT` kernels are known for causing a headache with the **official Nvidia graphics driver**, at least the binary versions of it. Please have a look yourself before deciding to continue if you have an Nvidia GPU. Potentially you might end up with the Nouveau Linux graphics driver with a lower refresh rate or lower resolution and for laptops you might lose access to your external display depending on the precise computer architecture and graphics card. If you have an Nvidia card and decide to continue open **`Software & Updates`**, browse **`Additional Drivers`** and **select `X.Org X server - Nouveau display driver` as the driver for your graphics card** as shown in the screenshot below.
+
+![Nouveau driver in software and updates](../media/ubuntu_software_and_updates.png)
 
 ### 1.2 Installation
 
