@@ -6,7 +6,9 @@ Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - February 2023)
 
 The set-up of `PREEMPT_RT` basically consists in **installing a new kernel** either from an existing **Debian package** that was compiled by somebody else for you, by creating a Debian package yourself by recompiling the kernel or installing it directly. After that you will have to perform a restart and booting into that freshly installed kernel as well as potentially changing the boot order in order to not having to boot into it manually at start-up.
 
-The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a system can be seen in the graphs below (refer to the real-time optimizations for a more precise explanation of how these graphs can be obtained). Note that both graphs are double-logarithmical plots and as such the difference at a first glance might not seem as big. But as can be seen from the maximum latencies the latency of a `PREEMPT_RT`-patched system is roughly **two orders of magnitude lower**. For any real-time determinism this maximum latency is much more important than the average latency.
+The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a system can be seen in the graphs below for two different systems (refer to the real-time optimizations for a more precise explanation of how these graphs can be obtained). Note that both graphs are double-logarithmical plots and as such the difference at a first glance might not seem as big. But as can be seen from the maximum latencies the latency of a `PREEMPT_RT`-patched system is roughly **between one to two orders of magnitude lower**. For any real-time determinism this maximum latency is much more important than the average latency.
+
+#### Lenovo ThinkStation P500
 
 | ![P500 with C-states enabled](../../media/p500_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
@@ -15,6 +17,16 @@ The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a sy
 | ![P500 with C-states enabled](../../media/p500_rt_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_rt_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkStation P500 running a **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkStation P500 running **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states disabled** |
+
+#### Lenovo ThinkPad T14
+
+| ![P500 with C-states enabled](../../media/t14_cstates_on_log.png) | ![P500 with C-states disabled](../../media/t14_cstates_off_log.png) |
+| :----------------------------------------------------------- | ------------------------------------------------------------ |
+| Lenovo ThinkPad T14 running an **unpatched** `5.15.0-58-generic` kernel with **C-states enabled** | Lenovo ThinkPad T14 running an **unpatched** `5.15.0-58-generic` kernel with **C-states disabled** |
+
+| ![P500 with C-states enabled](../../media/t14_rt_cstates_on_log.png) | ![P500 with C-states disabled](../../media/t14_rt_cstates_off_log.png) |
+| :----------------------------------------------------------- | ------------------------------------------------------------ |
+| Lenovo ThinkPad T14 running a **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkPad T14 running **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states disabled** |
 
 ### 1.1 Known issues
 
