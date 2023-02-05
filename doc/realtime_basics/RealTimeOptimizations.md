@@ -107,13 +107,13 @@ The test duration with five minutes is quite short. For true real-time systems t
 
 Both systems use the same self-compiled version of an **Ubuntu 22.04 5.15.86-rt56 kernel**. **Intel Turbo-boost** is **disabled** in the BIOS. Furthermore all tests for Docker are ran with Docker-Compose directly (without Visual Studio Code in between). Finally for best performance the T14 notebook was plugged in during the entire test.
 
-| ![P500 with C-states enabled](../../media/p500_cstates_on.png) | ![P500 with C-states disabled](../../media/p500_cstates_off.png) |
+| ![P500 with C-states enabled](../../media/p500_rt_cstates_on.png) | ![P500 with C-states disabled](../../media/p500_rt_cstates_off.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| Lenovo ThinkStation P500 running PREEMPT_RT with **C-states enabled** | Lenovo ThinkStation P500 running PREEMPT_RT with **C-states disabled** |
+| Lenovo ThinkStation P500 running `PREEMPT_RT` with **C-states enabled** | Lenovo ThinkStation P500 running `PREEMPT_RT` with **C-states disabled** |
 
-| ![T14 with C-states enabled](../../media/t14_cstates_on.png) | ![T14 with C-states disabled](../../media/t14_cstates_off.png) |
+| ![T14 with C-states enabled](../../media/t14_rt_cstates_on.png) | ![T14 with C-states disabled](../../media/t14_rt_cstates_off.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| Lenovo ThinkPad T14 Gen1 running PREEMPT_RT with **C-states enabled** | Lenovo ThinkPad T14 Gen1 running PREEMPT_RT with **C-states disabled** |
+| Lenovo ThinkPad T14 Gen1 running `PREEMPT_RT` with **C-states enabled** | Lenovo ThinkPad T14 Gen1 running `PREEMPT_RT` with **C-states disabled** |
 
 While latencies in the sub 100us region are generally far than enough for robotics, we can see that the **latency is greatly reduced for both systems when de-activating the C-states**, even halfed in the case of the Lenovo ThinkStation P500. These differences are also visible when using a Docker, as the latencies from real-time capable code ran inside a Docker are virtually indistinguishable from processes ran on the host system. It should be mentioned that the T14 has a remarkable performance for a notebook (several notebooks I used suffered from severe and regular latency spikes in the 500us region) but when running the test for extended periods rare latency spikes of up to two milliseconds were observed.
 

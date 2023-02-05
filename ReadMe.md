@@ -99,8 +99,8 @@ Then **any process from inside the Docker can set real-time priorities `rtprio`*
 
 This Github repository comes with a simple example that can be used to try it out. Inside the Docker container a [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start) is run to assess the real-time performance of the system. You can compare the outcome to running it on your local system. There should be virtually no difference between the two, as can be seen from the graphs below:
 
-| ![On host operating system](media/p500_cstates_off.png) | ![Inside Docker](media/p500_docker_cstates_off.png) |
-| ------------------------------------------------------- | --------------------------------------------------- |
+| ![On host operating system](media/p500_rt_cstates_off.png) | ![Inside Docker](media/p500_rt_docker_cstates_off.png) |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
 
 For launching the `cyclictest` open the Docker by typing
 
