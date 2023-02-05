@@ -232,6 +232,6 @@ $ sudo grub-customizer
 
 Select the desired kernel as default under `General/default entry/predefined` (see image below), close the GUI and restart your computer.
 
-![Default boot entry in Grub customizer](/home/tobit/Downloads/docker-realtime/media/grub_customizer_default.png)
+![Default boot entry in Grub customizer](../media/grub_customizer_default.png)
 
 You should now automatically boot into your freshly installed `PREEMPT_RT`-patched kernel.
