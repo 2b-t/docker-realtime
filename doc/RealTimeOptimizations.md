@@ -67,9 +67,9 @@ It is essential to low latencies to disable the idle states of the processor (se
 
 I personally prefer the first option as when I am working on real-time relevant code I do not want to call a script every time. Instead I will boot into a **dedicated kernel with the corresponding kernel parameters activated**. I will generate another boot entry using [Grub-Customizer](https://itsfoss.com/install-grub-customizer-ubuntu/) (see screenshots below), called `Ubuntu 22.04 real-time` where I basically clone the `X.XX.XX-rtXX` configuration [adding `processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll`](https://access.redhat.com/articles/65410) (see second-last line of the screenshot on the right).
 
-| ![Grub-Customizer settings](../../media/grub_customizer_0.png) | ![Grub-Customizer settings](../../media/grub_customizer_1.png) |
-| :----------------------------------------------------------- | ------------------------------------------------------------ |
-| Grub configuration                                           | Disabling C-states just for the PREEMPT_RT kernel            |
+| ![Grub-Customizer settings](../media/grub_customizer_0.png) | ![Grub-Customizer settings](../media/grub_customizer_1.png) |
+| :---------------------------------------------------------- | ----------------------------------------------------------- |
+| Grub configuration                                          | Disabling C-states just for the PREEMPT_RT kernel           |
 
 After boot you can use [`$ cat /proc/cmdline` to double check the settings](https://askubuntu.com/a/19487). 
 
@@ -107,11 +107,11 @@ The test duration with five minutes is quite short. For true real-time systems t
 
 Both systems use the same self-compiled version of an **Ubuntu 22.04 5.15.86-rt56 kernel**. **Intel Turbo-boost** is **disabled** in the BIOS. Furthermore all tests for Docker are ran with Docker-Compose directly (without Visual Studio Code in between). Finally for best performance the T14 notebook was plugged in during the entire test.
 
-| ![P500 with C-states enabled](../../media/p500_rt_cstates_on.png) | ![P500 with C-states disabled](../../media/p500_rt_cstates_off.png) |
+| ![P500 with C-states enabled](../media/p500_rt_cstates_on.png) | ![P500 with C-states disabled](../media/p500_rt_cstates_off.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkStation P500 running `PREEMPT_RT` with **C-states enabled** | Lenovo ThinkStation P500 running `PREEMPT_RT` with **C-states disabled** |
 
-| ![T14 with C-states enabled](../../media/t14_rt_cstates_on.png) | ![T14 with C-states disabled](../../media/t14_rt_cstates_off.png) |
+| ![T14 with C-states enabled](../media/t14_rt_cstates_on.png) | ![T14 with C-states disabled](../media/t14_rt_cstates_off.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkPad T14 Gen1 running `PREEMPT_RT` with **C-states enabled** | Lenovo ThinkPad T14 Gen1 running `PREEMPT_RT` with **C-states disabled** |
 

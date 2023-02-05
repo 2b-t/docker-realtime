@@ -10,21 +10,21 @@ The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a sy
 
 #### Lenovo ThinkStation P500
 
-| ![P500 with C-states enabled](../../media/p500_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_cstates_off_log.png) |
+| ![P500 with C-states enabled](../media/p500_cstates_on_log.png) | ![P500 with C-states disabled](../media/p500_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkStation P500 running an **unpatched** `5.15.0-58-generic` kernel with **C-states enabled** | Lenovo ThinkStation P500 running an **unpatched** `5.15.0-58-generic` kernel with **C-states disabled** |
 
-| ![P500 with C-states enabled](../../media/p500_rt_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_rt_cstates_off_log.png) |
+| ![P500 with C-states enabled](../media/p500_rt_cstates_on_log.png) | ![P500 with C-states disabled](../media/p500_rt_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkStation P500 running a **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkStation P500 running **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states disabled** |
 
 #### Lenovo ThinkPad T14
 
-| ![P500 with C-states enabled](../../media/t14_cstates_on_log.png) | ![P500 with C-states disabled](../../media/t14_cstates_off_log.png) |
+| ![P500 with C-states enabled](../media/t14_cstates_on_log.png) | ![P500 with C-states disabled](../media/t14_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkPad T14 running an **unpatched** `5.15.0-58-generic` kernel with **C-states enabled** | Lenovo ThinkPad T14 running an **unpatched** `5.15.0-58-generic` kernel with **C-states disabled** |
 
-| ![P500 with C-states enabled](../../media/t14_rt_cstates_on_log.png) | ![P500 with C-states disabled](../../media/t14_rt_cstates_off_log.png) |
+| ![P500 with C-states enabled](../media/t14_rt_cstates_on_log.png) | ![P500 with C-states disabled](../media/t14_rt_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Lenovo ThinkPad T14 running a **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkPad T14 running **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states disabled** |
 
@@ -184,7 +184,7 @@ Continue to restart the computer and boot into the newly installed kernel. Depen
 
 #### 1.2.3 Real-time Ubuntu
 
-From Ubuntu 22.04 onwards there is a real-time kernel based on PREEMPT_RT already available out of the box. How it can be set-up is discussed in more detail [here](https://ubuntu.com/blog/real-time-ubuntu-released). You will need to register yourself but the kernel is then free for personal usage.
+From Ubuntu 22.04 onwards there is a real-time kernel based on `PREEMPT_RT` already available out of the box. How it can be set-up is discussed in more detail [here](https://ubuntu.com/blog/real-time-ubuntu-released). You will need to register yourself but the kernel is then free for personal usage.
 
 ### 1.3 Allowing the user to set real-time permissions
 
@@ -211,3 +211,25 @@ In this context `rtprio` is the maximum real-time priority allowed for non-privi
 ### 1.4 Set real-time schedule
 
 The real-time schedule can be set from the command line with `chrt` as discussed [here](https://askubuntu.com/questions/51283/how-to-run-a-program-with-sched-rr-policy-from-command-line).
+
+### 1.5 Set boot order
+
+Likely after installing your new kernel you will want to boot automatically into the real-time kernel and not have to press `ESC` upon start every single time. This can be done by **changing the Grub boot order** either [manually](https://askubuntu.com/a/110738) or by [using the graphical tool by Daniel Richter](https://askubuntu.com/a/100246) (recommended). Latter can be installed with the following commands
+
+````sh
+$ sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+$ sudo apt-get update
+$ sudo apt-get install grub-customizer
+````
+
+and then launched
+
+````sh
+$ sudo grub-customizer
+````
+
+Select the desired kernel as default under `General/default entry/predefined` (see image below), close the GUI and restart your computer.
+
+![Default boot entry in Grub customizer](/home/tobit/Downloads/docker-realtime/media/grub_customizer_default.png)
+
+You should now automatically boot into your freshly installed `PREEMPT_RT`-patched kernel.
