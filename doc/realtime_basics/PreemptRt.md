@@ -10,11 +10,11 @@ The huge difference a `PREEMPT_RT`-patched kernel has on the **latency** of a sy
 
 | ![P500 with C-states enabled](../../media/p500_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| Lenovo ThinkStation P500 running an unpatched `5.15.0-58-generic` kernel with **C-states enabled** | Lenovo ThinkStation P500 running an unpatched `5.15.0-58-generic` kernel with **C-states disabled** |
+| Lenovo ThinkStation P500 running an **unpatched** `5.15.0-58-generic` kernel with **C-states enabled** | Lenovo ThinkStation P500 running an **unpatched** `5.15.0-58-generic` kernel with **C-states disabled** |
 
 | ![P500 with C-states enabled](../../media/p500_rt_cstates_on_log.png) | ![P500 with C-states disabled](../../media/p500_rt_cstates_off_log.png) |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| Lenovo ThinkStation P500 running a `PREEMPT_RT`-patched `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkStation P500 running `PREEMPT_RT`-patched `5.15.86-rt56` kernel with **C-states disabled** |
+| Lenovo ThinkStation P500 running a **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states enabled** | Lenovo ThinkStation P500 running **`PREEMPT_RT`-patched** `5.15.86-rt56` kernel with **C-states disabled** |
 
 ### 1.1 Known issues
 
