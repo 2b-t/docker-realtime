@@ -8,7 +8,8 @@ SHELL ["/bin/bash", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Dependencies for latency plot
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+ && apt-get install -y \
     build-essential \
     curl \
     gnuplot-qt \
@@ -19,14 +20,16 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 # Dependencies for Bash unit-tests
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+ && apt-get install -y \
     bats \
     dialog \
     tmux \
  && rm -rf /var/lib/apt/lists/*
 
 # Cyclictest and mklatencyplot
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+ && apt-get install -y \
     rt-tests \
  && rm -rf /var/lib/apt/lists/* \
  && cd ${WS_DIR} \
