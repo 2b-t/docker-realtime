@@ -9,13 +9,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Dependencies for latency plot
 RUN apt-get update && apt-get install -y \
-    curl \
     build-essential \
-    make \
+    curl \
+    gnuplot-qt \
     libnuma-dev \
+    make \
     python3 \
     python3-distutils \
-    gnuplot-qt \
  && rm -rf /var/lib/apt/lists/*
 
 # Dependencies for Bash unit-tests
