@@ -38,15 +38,41 @@ The `PREEMPT_RT` patched-kernels are known for causing a headache with the **off
 
 ### 1.2 Installation
 
-The installation of `PREEMPT_RT` can be performed either by installing the patch from an existing **Debian package** or by re-compiling the kernel yourself. While the first option should be preferred for having a more detailed control over the kernel set-up latter might still be desired or might be your only options in rare cases of lacking compatibility. I have provided **two scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt)** which are able to install either from an existing Debian package or by recompiling the kernel automatically. This means it should not be necessary to perform this steps manually in any case. Nonetheless the required steps are also discussed in the section below. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`. As of 2023 and Ubuntu 22.04 the a `PREEMPT_RT` kernel can also be installed through Ubuntu Pro (see the installation procedure below!). I have tested this briefly and was not able to get a decent real-time performance. It was not as bad as the unpatched solution but had spikes of several hundred microseconds! Therefore I would not recommend it as of now!
+The installation of `PREEMPT_RT` can be performed either by installing the patch from an existing Debian package or by re-compiling the kernel yourself. As of 2023 and Ubuntu 22.04 the a `PREEMPT_RT` kernel can also be installed through **Ubuntu Pro** (see the installation procedure below!). If you are using Ubuntu this is definitely the **preferred option**.
+
+In case you can't or don't want to use it I have also outlined the installation from Debian as well as from source code. While the first option should be preferred for having a more detailed control over the kernel set-up latter might still be desired or might be your only options in rare cases of lacking compatibility. I have provided two scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) which are able to install either from an existing Debian package or by recompiling the kernel automatically. This means it should not be necessary to perform this steps manually in any case. Nonetheless the required steps are also discussed in the section below. Before using the scripts be sure to make them executable on your system with `$ sudo chmod +x install_debian_preemptrt`.
 
 
 
-#### 1.2.1 Installation from Debian package (recommended)
+#### 1.2.1 Ubuntu real-time kernel (recommended)
+
+From Ubuntu 22.04 onwards there is a [real-time kernel based on `PREEMPT_RT` already available out of the box](https://ubuntu.com/blog/real-time-ubuntu-released). For **personal use** you can **register up to five machines for free** while commercial customers will have to sign up for a [subscription](https://ubuntu.com/pro/subscribe). This is by far the easiest installation method so I can highly recommend it!
+
+For this you will have to register for [**Ubuntu One**](https://login.ubuntu.com/). You can then log into [**Ubuntu Pro**](https://ubuntu.com/pro/) with it. Your dashboard on Ubuntu Pro will show your current **token**, I have blurred mine out in the following screenshot. Copy it, you will need it for registering new machines.
+
+![Ubuntu Pro dashboard](../media/ubuntu_pro_dashboard.png)
+
+Now open a new terminal on your **machine** and connect it to your **Ubuntu Pro** account with `$ sudo pro attach <your_token>`:
+
+![Connect your machine to Ubuntu Pro](../media/ubuntu_pro_attach.png)
+
+Continue to **activate the Ubuntu realtime-kernel** with `$ sudo pro enable realtime-kernel` and confirming twice with `y`:
+
+![Activate Ubuntu realtime-kernel](../media/ubuntu_pro_enable_realtime.png)
+
+After **rebooting** your Ubuntu Pro status `$ pro status` should be similar to the following screenshot with the `realtime-kernel` showing up as activated:
+
+![Ubuntu realtime-kernel status](../media/ubuntu_pro_status.png)
+
+Make sure you actually also **boot into the real-time kernel**. Make sure that `$ uname -r` actually outputs something like `5.15.0-1032-realtime` and not your regular kernel! The installation installs it but does not automatically boot into it!
+
+
+
+#### 1.2.2 Installation from Debian package
 
 The installation from a Debian package is way **simpler** than the recompilation listed below but is at the same time **less flexible** as it is only available for a limited number of kernels and kernel configurations. You might not be able to make the Debian package work with your particular system and might have to re-compile the kernel anyways. Nonetheless it is **highly advised** that you follow these simple steps before turning to a full re-compilation of the kernel. I have provided a script for that as well as outlined the steps that are performed by the script below.
 
-##### 1.2.1.1 Installation via script
+##### 1.2.2.1 Installation via script
 
 Start of by launching [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and follow the installation instructions
 
@@ -57,7 +83,7 @@ $ ./install_debian_preemptrt
 
 Afterwards you can reboot your system (be sure to select the correct kernel!) and should already be ready to go. You can check the kernel version with `$ uname -r` to verify that you are using the correct kernel and the installation was indeed successful. Quite often this installation might fail due to missing dependencies. I am not completely sure what is the issue there but in case this does not work you will have to compile the kernel yourself as outlined in the next section.
 
-##### 1.2.1.2 Manual installation
+##### 1.2.2.2 Manual installation
 
 Have a look at the search results resulting from [this query on package.debian.org](https://packages.debian.org/search?keywords=linux-image-rt-amd64) (potentially changing the architecture!) and see if you can find a kernel close to yours, e.g. [this one](https://packages.debian.org/bullseye/linux-image-rt-amd64). If you can find one click on the architecture `amd64` under `Download linux-image-rt-amd64` on the bottom and select a geographically suiting mirror and save the image in a location of your choice.
 
@@ -72,11 +98,11 @@ Jump to section 1.3 and then try to reboot. In case it does not work you will ha
 
 
 
-#### 1.2.2 Re-compilation of the kernel
+#### 1.2.3 Re-compilation of the kernel
 
 If you can't install a patched kernel from an existing Debian package you will have to re-compile a kernel for yourself. This procedure is a very slow and painful process in particular if you do it for the first time. I have again tried to simplify it by providing a script for it and outlined the lengthy manual installation process as well.
 
-##### 1.2.2.1 Installation via script
+##### 1.2.3.1 Installation via script
 
 If the installation above fails (or for some good reason you have to compile the kernel yourself) you can use the [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) script.
 
@@ -98,7 +124,7 @@ $ sudo ./compile_kernel_preemptrt 5.10.78-rt55
 
 This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers to be passed as arguments can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
 
-##### 1.2.2.2 Manual installation
+##### 1.2.3.2 Manual installation
 
 The re-compilation of the kernel is described in the [official Ubuntu installation guide](https://help.ubuntu.com/lts/installation-guide/amd64/install.en.pdf#page=98) as well as on the [Franka Emika installation guide](https://frankaemika.github.io/docs/installation_linux.html#setting-up-the-real-time-kernel) page but [might depend on the precise version](https://stackoverflow.com/a/51709420). In case you are running into issues you might have to consider [this](https://askubuntu.com/a/1338150) and [this](https://askubuntu.com/a/1329625) post. As already mentioned the script `src/compile_kernel_preemptrt` does the steps that are listed in this section. Therefore it should not be necessary for you to do the following steps manually!
 
@@ -226,28 +252,6 @@ Now it is time to build the kernel:
   ```
 
 Continue to restart the computer and boot into the newly installed kernel. Depending on the chosen installation procedure and BIOS set-up you **might have to turn off secure boot** in your UEFI BIOS menu or else you might not be able to boot. You can verify if you booted into the correct kernel by executing `$ uname -r` in the console. If set-up correctly your kernel should contain `rt` in its version and `/sys/kernel/realtime` should exist and contain the value `1`. In order to check if the kernel compiled correctly you can output the kernel flags with [this tool](https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh).
-
-
-
-#### 1.2.1 Ubuntu real-time kernel (not recommended!)
-
-From Ubuntu 22.04 onwards there is a [real-time kernel based on `PREEMPT_RT` already available out of the box](https://ubuntu.com/blog/real-time-ubuntu-released). For **personal use** you can **register up to five machines for free** while commercial customers will have to sign up for a [subscription](https://ubuntu.com/pro/subscribe). I have briefly tested this on my systems and could not get a performance anywhere as close as with my self-compiled `PREEMPT_RT`-patched kernel. I still had spikes of several 100 us. Therefore I currently can not recommend this for low latency applications! But it is by far the easiest installation method so you might want to give it a go if you want to perform a quick test.
-
-For this you will have to register for [**Ubuntu One**](https://login.ubuntu.com/). You can then log into [**Ubuntu Pro**](https://ubuntu.com/pro/) with it. Your dashboard on Ubuntu Pro will show your current **token**, I have blurred mine out in the following screenshot. Copy it, you will need it for registering new machines.
-
-![Ubuntu Pro dashboard](../media/ubuntu_pro_dashboard.png)
-
-Now open a new terminal on your **machine** and connect it to your **Ubuntu Pro** account with `$ sudo pro attach <your_token>`:
-
-![Connect your machine to Ubuntu Pro](../media/ubuntu_pro_attach.png)
-
-Continue to **activate the Ubuntu realtime-kernel** with `$ sudo pro enable realtime-kernel` and confirming twice with `y`:
-
-![Activate Ubuntu realtime-kernel](../media/ubuntu_pro_enable_realtime.png)
-
-After **rebooting** your Ubuntu Pro status `$ pro status` should be similar to the following screenshot with the `realtime-kernel` showing up as activated:
-
-![Ubuntu realtime-kernel status](../media/ubuntu_pro_status.png)
 
 
 
