@@ -44,7 +44,13 @@ As a Docker shares the host kernel allowing a container to run real-time capable
 
 There are several ways of applying a [`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start) patch. [Since February 2023](https://ubuntu.com/blog/real-time-ubuntu-is-now-generally-available) and Ubuntu 22.04 an Ubuntu realtime-kernel, that can be installed with a few terminal commands, is available through [**Ubuntu Pro**](https://ubuntu.com/pro). For **personal use** you can **register up to five machines for free** while commercial customers will have to sign up for a [subscription](https://ubuntu.com/pro/subscribe). I recommend installing the patch in this way as it is by far the easiest and most reliable. The guide  [`doc/PreemptRt.md`](./doc//PreemptRt.md) walks you through the registration and installation procedure.
 
-Alternatively, I have also lined out the installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) in [`doc/PreemptRt.md`](./doc//PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt).
+Alternatively, I have also lined out the installation procedure either by compilation from source or from an existing [Debian package](https://packages.debian.org/buster/linux-image-rt-amd64) in [`doc/PreemptRt.md`](./doc//PreemptRt.md). The same procedure can also be performed with the provided scripts [`src/install_debian_preemptrt`](./src/install_debian_preemptrt) and [`src/compile_kernel_preemptrt`](./src/compile_kernel_preemptrt) (see screenshots below).
+
+| ![Installation script from existing Debian](media/install_debian_preemptrt_2.png) | ![Compilation from source](media/compile_kernel_preempt_rt_1.png) |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Installation script for downloading existing Debian package  | Installation script for compilation from source              |
+
+
 
 ### 1.2 Setting up real-time privileges
 

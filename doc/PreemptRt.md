@@ -78,8 +78,16 @@ Start of by launching [`src/install_debian_preemptrt`](./src/install_debian_pree
 
 ```shell
 $ cd src
-$ ./install_debian_preemptrt
+$ mkdir tmp
+$ cd tmp
+$ ./../install_debian_preemptrt
 ```
+
+Below are shown screenshots of the installation script:
+
+| ![Launch from command line](../media/install_debian_preemptrt_0.png) | ![Select desired kernel version](../media/install_debian_preemptrt_1.png) |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![Select download server](../media/install_debian_preemptrt_2.png) | ![Install the freshly downloaded Debian package](../media/install_debian_preemptrt_3.png) |
 
 Afterwards you can reboot your system (be sure to select the correct kernel!) and should already be ready to go. You can check the kernel version with `$ uname -r` to verify that you are using the correct kernel and the installation was indeed successful. Quite often this installation might fail due to missing dependencies. I am not completely sure what is the issue there but in case this does not work you will have to compile the kernel yourself as outlined in the next section.
 
@@ -110,7 +118,9 @@ You can launch it in two different ways:
 
 ```shell
 $ cd src
-$ ./compile_kernel_preemptrt
+$ mkdir tmp
+$ cd tmp
+$ ./../compile_kernel_preemptrt
 ```
 
 will install the required dependencies and then open a dialog which lets you browse the possible versions and available options manually, reducing the copy and paste operations.
@@ -119,10 +129,21 @@ If you supply a correct real-time patch version from the list of available ones 
 
 ```shell
 $ cd src
-$ sudo ./compile_kernel_preemptrt 5.10.78-rt55
+$ mkdir tmp
+$ cd tmp
+$ sudo ./../compile_kernel_preemptrt 5.10.78-rt55
 ```
 
 This might be helpful for deploying a new kernel automatically on a remote system. The possible version numbers to be passed as arguments can be found at [here](https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/).
+
+Below are shown screenshots of the installation script:
+
+| ![Launch the script from command line](../media/compile_kernel_preempt_rt_0.png) | ![Select the major kernel version](../media/compile_kernel_preempt_rt_1.png) |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![Select the desired version of PREEMPT_RT](../media/compile_kernel_preempt_rt_2.png) | ![Optional: Make manual modifications to the kernel settings](../media/compile_kernel_preempt_rt_3.png) |
+| ![Exit and save the manual kernel configuration](../media/compile_kernel_preempt_rt_4.png) | ![Select Debian or classic installation and wait](../media/compile_kernel_preempt_rt_5.png) |
+
+
 
 ##### 1.2.3.2 Manual installation
 
