@@ -4,11 +4,11 @@ Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - April 2022)
 
 
 
-## 1. Control groups
+## 1. Control groups (not recommended)
 
 As pointed out in the guide [`RealTimeLinux.md`](./RealTimeLinux.md) one way of real-time Linux are so called control groups. This requires though that the kernel is compiled with the flag **`CONFIG_RT_GROUP_SCHED`**. This is not the case by default for Ubuntu and neither are there public Debian packages. In case you are not sure if your kernel already has it set, launch [this script](https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh). In case you do not have it, you will have to recompile your kernel. This is discussed in the next section.
 
-As stated [here](https://wiki.linuxfoundation.org/realtime/documentation/known_limitations) `PREEMPT_RT` currently can't be compiled with the `CONFIG_RT_GROUP_SCHED` and therefore you can't combine control groups with the `PREEMPT_RT` patch (see [here for a comparison](https://stackoverflow.com/questions/62932857/difference-between-config-rt-group-sched-and-preempt-rt)).
+As stated [here](https://wiki.linuxfoundation.org/realtime/documentation/known_limitations) `PREEMPT_RT` currently can't be compiled with the `CONFIG_RT_GROUP_SCHED` and therefore you can't combine control groups with the `PREEMPT_RT` patch (see [here for a comparison](https://stackoverflow.com/questions/62932857/difference-between-config-rt-group-sched-and-preempt-rt)). Furthermore **control groups are known to have a high jitter and I would not recommend them for robotics**. Nonetheless I left this section in this document as it was hard to find good and detailed information on it elsewhere. Feel free to skip this entire document if you are working on real-time for robotics or controlling any other form of hardware.
 
 ### 1.1 Compile the kernel
 
@@ -59,13 +59,11 @@ e.g. for the cyclictest:
 $ sudo cgexec -g cpu:system.slice cyclictest -m -sp99 -d0
 ```
 
-## 1. Control groups with `PREEMPT`
+## 2. Control groups with Docker
 
-As already pointed out in [`realtime_basics/ControlGroups.md`](../realtime_basics/ControlGroups.md) real-time groups require the kernel flag `CONFIG_RT_GROUP_SCHED` and therefore you will likely have to recompile your kernel. Follow the installation in that guide before continuing.
+As already pointed out in the section before real-time groups require the kernel flag `CONFIG_RT_GROUP_SCHED` and therefore you will likely have to recompile your kernel. Be warned: **Control groups are known to have a high amount of jitter** and are mentioned here just for completeness. They are unlikely to be suitable for real-time robotics.
 
-Be warned: **Control groups are known to have a high amount of jitter** and are mentioned here just for completeness. They are unlikely to be sufficient for real-time robotics.
-
-### 1.1 Launching a real-time Docker with control groups
+### 2.1 Launching a real-time Docker with control groups
 
 In order to run a real-time Docker you will first have to **kill the Docker daemon** if it is already running with
 
