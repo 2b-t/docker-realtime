@@ -87,7 +87,7 @@ $ sudo i7z
 
 It will show you the percentage of time that each individual core is spending in a particular C-state:
 
-![i7z preview](../../media/i7z.png)
+![i7z preview](../media/i7z.png)
 
 Additionally there is [`cpupower`](https://manpages.ubuntu.com/manpages/impish/man1/cpupower-idle-set.1.html). The problem with it is though that it is specific for a kernel, meaning it has be downloaded through `$ sudo apt-get install linux-tools-$(uname -r)` and is generally not available for a real-time kernel that you compiled from source, meaning you would have to compile it as well when compiling the kernel!
 
