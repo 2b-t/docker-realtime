@@ -157,6 +157,19 @@ function setup() {
   assert_regex "${RESULT_CONFIG}" "^#SOME_SETTING"
 }
 
+@test "Test select_manual_configuration" {
+  declare desc="Test if the manual configuration can be started from the graphic user menu"
+  tmux new -d -A -s "bats_test_session"
+  local TEST_FILE=$(test_file)
+  tmux send-keys -t "bats_test_session" "source ${TEST_FILE}" Enter
+  tmux send-keys -t "bats_test_session" 'echo $(select_manual_configuration) >/tmp/capture' Enter
+  sleep 5
+  tmux send-keys -t "bats_test_session" Enter
+  tmux send-keys -t "bats_test_session" "exit" Enter
+  local IS_MANUAL_CONFIG=$(</tmp/capture)
+  assert_equal "${IS_MANUAL_CONFIG}" 1
+}
+
 @test "Test select_installation_mode" {
   declare desc="Test if the installation mode can be selected from the graphic user menu"
   tmux new -d -A -s "bats_test_session"

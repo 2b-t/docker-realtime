@@ -36,8 +36,12 @@ function install_kernel_interactive() {
   set_recommended_preemptrt_settings
   info_msg "Forcing unsigned kernel..."
   unsign_kernel_configuration
-  info_msg "Override any settings if desired, else simply exit the menu..."
-  make menuconfig
+  info_msg "Override settings manually with menuconfig if desired..."
+  IS_MANUAL_CONFIG=$(select_manual_configuration)
+  if [ "${IS_MANUAL_CONFIG}" -eq 0 ]
+    then
+      make menuconfig
+  fi
 
   local INSTALLATION_MODE=$(select_installation_mode)
   if [ "${INSTALLATION_MODE}" == "Debian" ]

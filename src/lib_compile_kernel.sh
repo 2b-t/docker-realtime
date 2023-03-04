@@ -206,6 +206,12 @@ function set_recommended_preemptrt_settings() {
   find_and_replace_in_config "${KERNEL_CONFIG_FILE}" "CONFIG_CPU_ISOLATION" "y"
 }
 
+function select_manual_configuration() {
+  declare desc="Decide whether to make additional changes with menuconfig to the kernel configuration or not"
+  dialog --keep-tite --stdout --title "Start menuconfig" --defaultno --yesno "Do you want to make manual changes to the kernel configuration with menuconfig?" 0 0
+  echo $?
+}
+
 function select_installation_mode() {
   declare desc="Select installation modality"
   echo $(dialog --keep-tite --stdout --default-item "Debian package" --menu "Select the desired installation mode:" 0 0 5 "Debian" "Debian package" "Classic" "Install directly")
@@ -218,7 +224,7 @@ function generate_preemptrt_kernel_debian_package() {
 
 function select_install_now() {
   declare desc="Decide whether to install the patched kernel from Debian package now or install it later on"
-  dialog --keep-tite --stdout --title "Install Debian package" --yesno "Want to install the Debian package now" 0 0
+  dialog --keep-tite --stdout --title "Install Debian package" --yesno "Want to install the Debian package now?" 0 0
   echo $?
 }
 
