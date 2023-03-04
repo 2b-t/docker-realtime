@@ -212,7 +212,7 @@ $ make oldconfig
 
 Go ahead and **change the relevant configuration parameters** if you want to. This can be done graphically with `$ make xconfig`, `$ make menuconfig` or manually by modifying the `.config` file located inside `linux-${KERNEL_VER_FULL}`. The [German Open Source Automation Development Lab (OSADL) ](https://www.osadl.org/) performs long-term tests on several kernel versions and publishes the results on the internet. One might want to use these parameters instead rather than working with his/her own `.config` file. An overview of the corresponding systems can be found [here](https://www.osadl.org/Real-time-optimization.qa-farm-latency-optimization.0.html) and the configuration file for a particular system can be downloaded (e.g. [this one](https://www.osadl.org/?id=1087#kernel)). If you set incompatible flags they might be reset later on. As soon as the kernel compilation starts **check the `.config` file if your desired settings are still set** or if they were implicitly discarded. If you want to see what the configuration of your current kernel looks like [type `$ cat /boot/config-$(uname -r)` in your console](https://www.baeldung.com/linux/kernel-config). 
 
-I personally generally use the following settings:
+I personally generally use the following settings (for a more detailed information what these parameters mean precisely refer to [this great introduction to the Linux kernel](https://wxdublin.gitbooks.io/deep-into-linux-and-beyond/content/idle_scheduling_class.html)):
 
 ```shell
 # Find and replace
