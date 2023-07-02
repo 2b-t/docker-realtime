@@ -6,7 +6,7 @@ Author: [Tobit Flatscher](https://github.com/2b-t) (August 2022 - February 2023)
 
 ## 1. Introduction
 
-The following sections will outline a few things to consider when setting up a real-time capable systems and optimizations that should help improve its real-time performance significantly. This guide is largely based on the exhaustive [**Red Hat optimisation guide**](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html-single/optimizing_rhel_8_for_real_time_for_low_latency_operation/index), focusing on particular aspects of it.
+The following sections will outline a few things to consider when setting up a real-time capable systems and optimizations that should help improve its real-time performance significantly. This guide is largely based on the exhaustive [**Red Hat optimisation guide**](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html-single/optimizing_rhel_8_for_real_time_for_low_latency_operation/index), focusing on particular aspects of it. Additional information can be found in the [Ubuntu real-time kernel tuning guide](https://ubuntu.com/blog/real-time-kernel-tuning).
 
 ## 2. Selecting hardware
 

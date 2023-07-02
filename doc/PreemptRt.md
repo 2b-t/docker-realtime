@@ -46,7 +46,7 @@ In case you can't or don't want to use it I have also outlined the installation 
 
 #### 1.2.1 Ubuntu real-time kernel (recommended)
 
-From Ubuntu 22.04 onwards there is a [real-time kernel based on `PREEMPT_RT` already available out of the box](https://ubuntu.com/blog/real-time-ubuntu-released). For **personal use** you can **register up to five machines for free** while commercial customers will have to sign up for a [subscription](https://ubuntu.com/pro/subscribe). This is by far the easiest installation method so I can highly recommend it!
+From Ubuntu 22.04 onwards there is a [real-time kernel based on `PREEMPT_RT` already available out of the box](https://ubuntu.com/blog/real-time-ubuntu-released). For **personal and small-scale commercial use** you can **register up to five machines for free** while commercial customers will have to sign up for a [subscription](https://ubuntu.com/pro/subscribe). This is by far the easiest installation method so I can highly recommend it!
 
 For this you will have to register for [**Ubuntu One**](https://login.ubuntu.com/). You can then log into [**Ubuntu Pro**](https://ubuntu.com/pro/) with it. Your dashboard on Ubuntu Pro will show your current **token**, I have blurred mine out in the following screenshot. Copy it, you will need it for registering new machines.
 
