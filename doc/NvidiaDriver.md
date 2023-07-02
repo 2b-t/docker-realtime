@@ -27,7 +27,7 @@ For more information on working with the Nvidia driver with Docker refer to [thi
 
 
 
-## 1. Troubleshooting
+## 2. Troubleshooting
 
 In case you have trouble booting into a specific kernel after the update check which kernels with the Nvidia kernel module **`dkms status`** outputs:
 
