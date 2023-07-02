@@ -4,7 +4,7 @@
     "../docker/docker-compose.yml" // Alternative: "../docker/docker-compose-gui.yml"
   ],
   "service": "docker_realtime",
-	"workspaceFolder": "/benchmark",
+  "workspaceFolder": "/benchmark",
   "shutdownAction": "stopCompose",
   "extensions": [
   ]
