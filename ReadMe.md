@@ -13,6 +13,7 @@ This is guide explains how one can **develop inside/deploy a [Docker container](
 - **Basics of real-time systems** and an [*overview of different real-time Linux approaches*](./doc/RealTimeLinux.md)
 - **Set-up** of a real-time system, in particular activating the [Ubuntu realtime-kernel](https://ubuntu.com/blog/real-time-ubuntu-is-now-generally-available) or alternatively the [*installation of `PREEMPT_RT`*](./doc/PreemptRt.md) supplying simple [*scripts for automatically re-compiling the kernel*](./src/compile_kernel_preemptrt)
 - [Possible **optimizations**](./doc/RealTimeOptimizations.md) of a real-time system in order to minimise the latency and **benchmarking** the real-time performance by means of [`cyclictest`](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start)
+- Making the [**Nvidia driver** work with `PREEMPT_RT`](./doc/NvidiaDriver.md)
 - Required settings for a **real-time capable container** with a **[`PREEMPT_RT`](https://wiki.linuxfoundation.org/realtime/start) patched host system**
 
 This guide does not apply to Windows and Macintosh operating systems as it relies on a `PREEMPT_RT`-patched host system and Docker on Windows and Macintosh actually runs with a light-weight virtual machine in the middle.
