@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  docker_realtime:
+    extends:
+      file: docker-compose-gui.yml
+      service: docker_realtime
+    environment:
+     - NVIDIA_DRIVER_CAPABILITIES=all
+     - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia

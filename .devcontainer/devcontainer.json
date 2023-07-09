@@ -1,7 +1,7 @@
 {
   "name": "Docker PREEMPT_RT real-time",
   "dockerComposeFile": [
-    "../docker/docker-compose.yml" // Alternative: "../docker/docker-compose-gui.yml"
+    "../docker/docker-compose.yml" // Alternative: "../docker/docker-compose-gui.yml", "../docker/docker-compose-gui-nvidia.yml"
   ],
   "service": "docker_realtime",
   "workspaceFolder": "/benchmark",
