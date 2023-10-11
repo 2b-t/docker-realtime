@@ -27,7 +27,9 @@ function select_debian_version() {
   local DIALOG_POSSIBLE_DEBIAN_VERSIONS=""
   for VER in ${POSSIBLE_DEBIAN_VERSIONS}; do
     local PREEMPTRT_FILE=$(get_preemptrt_file "$VER")
-    DIALOG_POSSIBLE_DEBIAN_VERSIONS="${DIALOG_POSSIBLE_DEBIAN_VERSIONS} ${VER} ${PREEMPTRT_FILE}"
+    if [ ! -z "${PREEMPTRT_FILE}" ]; then
+      DIALOG_POSSIBLE_DEBIAN_VERSIONS="${DIALOG_POSSIBLE_DEBIAN_VERSIONS} ${VER} ${PREEMPTRT_FILE}"
+    fi
   done
   echo $(dialog --keep-tite --stdout --menu "Select the desired PREEMPT_RT kernel version:" 0 0 4 ${DIALOG_POSSIBLE_DEBIAN_VERSIONS})
 }
