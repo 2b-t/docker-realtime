@@ -60,6 +60,6 @@ Similarly we will want to disable all hardware features that lead to non-uniform
 
 The operating system is the glue between hardware and user code. The main cause for latencies caused by the operating system is **task scheduling**. Scheduling is very complex on modern multi-core processors. Every time the operating system switches task (context) the system will have to save register values to RAM and then later restore them. Furthermore there are some parts of the kernel and drivers that can't be interrupted. There are different ways to reduce this latency that are discussed in the dedicated real-time Linux page.
 
-### 2.3 Latency cause by software libraries and user code
+### 2.3 Latency caused by software libraries and user code
 
 This repository contains a dedicated section on writing user code and what to be aware of when using third-party libraries. Refer to the corresponding page for more details.
