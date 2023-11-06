@@ -55,7 +55,7 @@ One can find a few developer checklists for real-time programming such as [this]
     ```c
     #include <sys/mman.h>
     
-    ::mlockall(MCL_CURRENT | MCL_FUTURE)
+    ::mlockall(MCL_CURRENT | MCL_FUTURE);
     ```
 
 - Generally real-time processes need to communicate with other non real-time processes. **Do not use standard mutexes (e.g. `std::mutex`) when communicating between threads with different priorities** as this is known to potentially result in [priority inversion](https://en.wikipedia.org/wiki/Priority_inversion): A low-priority task might only run after another task with same or slightly higher priority and therefore block the high-priority task that relies on the low-priority task to complete
