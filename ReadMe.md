@@ -18,7 +18,7 @@ This is guide explains how one can **develop inside/deploy a [Docker container](
 
 This guide does not apply to Windows and Macintosh operating systems as it relies on a `PREEMPT_RT`-patched host system and Docker on Windows and Macintosh actually runs with a light-weight virtual machine in the middle.
 
-For an **introduction into development with Docker** and Docker-Compose, how to set it up in Visual Studio Code and a guide for using it with graphic user interfaces and ROS workspaces have a look at my other repository [**`docker-for-ros`**](https://github.com/2b-t/docker-for-ros).
+For an **introduction into development with Docker** and Docker-Compose, how to set it up in Visual Studio Code and a guide for using it with graphic user interfaces and ROS workspaces for applications in robotics have a look at my other repository [**`docker-for-robotics`**](https://github.com/2b-t/docker-for-robotics).
 
 ### Use-cases
 
