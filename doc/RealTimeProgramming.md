@@ -29,10 +29,10 @@ One can find a few developer checklists for real-time programming such as [this]
   struct ::sched_param param {};
   ::pthread_getschedparam(t.native_handle(), &policy, &param);
   param.sched_priority = 80;
-  ::pthread_setschedparam(t.native_handle(), &policy, &param);
+  ::pthread_setschedparam(t.native_handle(), policy, &param);
   ```
 
-- Set a **scheduling policy** that fits your needs (see [here](https://man7.org/linux/man-pages/man7/sched.7.html)). **SCHED_FIFO`** is likely the one you want to go for if you do not have a particular reason to do otherwise:
+- Set a **scheduling policy** that fits your needs (see [here](https://man7.org/linux/man-pages/man7/sched.7.html)). **`SCHED_FIFO`** is likely the one you want to go for if you do not have a particular reason to do otherwise:
   ```c
   #include <pthread.h>
   #include <sched.h>
@@ -41,7 +41,7 @@ One can find a few developer checklists for real-time programming such as [this]
   struct ::sched_param param {};
   ::pthread_getschedparam(t.native_handle(), &policy, &param);
   policy = SCHED_FIFO;
-  ::pthread_setschedparam(t.native_handle(), &policy, &param);
+  ::pthread_setschedparam(t.native_handle(), policy, &param);
   ```
 
 - Dynamic memory allocation (reserving virtual and physical memory) is slow and so is copying. Both are generally not real-time safe. **Avoid any form of dynamic memory allocation inside real-time code**:
