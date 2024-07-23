@@ -122,7 +122,7 @@ The effectiveness of turning the C-states off is evaluated for two systems, a [*
 $ cyclictest --latency=750000 -D5m -m -Sp90 -i200 -h400 -q
 ```
 
-The parameter `latency` here is essential as per default `cyclictest` writes to `/dev/cpu_dma_latency`, effectively disabling the C-states. This way one has a realistic overview of what the system might be capable of but not how another program will behave that does not use the same optimization!
+Make sure to set an appropriate priority with the flag `-p`, e.g. `-p90` (and potentially also the policy with `--policy`, e.g. `--policy=fifo`) as otherwise a low default priority will be assumed not reflecting the actual performance of the system. The parameter `latency` here is essential as per default `cyclictest` writes to `/dev/cpu_dma_latency`, effectively disabling the C-states. This way one has a realistic overview of what the system might be capable of but not how another program will behave that does not use the same optimization!
 
 The test duration with five minutes is quite short. For true real-time systems the system latency is generally investigated over the course of days or weeks (generally also applying [stress tests](https://www.cyberciti.biz/faq/stress-test-linux-unix-server-with-stress-ng/) to the system) as certain driver-related issues might only manifest themselves over time. Nonetheless the following test should be sufficient to illustrate the differences in latency.
 
