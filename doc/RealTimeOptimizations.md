@@ -1,6 +1,6 @@
 # Real-time Optimizations
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2022 - February 2023)
+Author: [Tobit Flatscher](https://github.com/2b-t) (2022 - 2024)
 
 
 
@@ -160,7 +160,7 @@ You can **isolate the CPUs** by adding the following option (the numbers corresp
 GRUB_CMDLINE_LINUX_DEFAULT=“isolcpus=1-3,5,7”
 ```
 
-to `/etc/default/grub` and then update grub with `$ sudo update-grub` and then reboot.
+to `/etc/default/grub` and then update grub with `$ sudo update-grub` and then reboot. Alternatively you can add the option `isolcpus=1-3` to the kernel parameters with the Grub customizer as described above.
 
 Additionally it makes sense to also **isolate the corresponding [hardware interrupts (IRQs)](https://en.wikipedia.org/wiki/Interrupt_request_(PC_architecture))** (on a dedicated CPU), disabling the irqbalance daemon and binding the process to a particular CPU as described [here](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html-single/optimizing_rhel_8_for_real_time_for_low_latency_operation/index#assembly_binding-interrupts-and-processes_optimizing-RHEL8-for-real-time-for-low-latency-operation). This is in particular crucial for applications that include network and EtherCAT communication.
 
