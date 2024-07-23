@@ -154,13 +154,13 @@ It will then output a report at the end.
 
 Typically one will reserve a CPU core for a particular real-time task as described for Grub and Linux [here](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/7/html/tuning_guide/isolating_cpus_using_tuned-profiles-realtime) and [here](http://doc.dpdk.org/spp-18.02/setup/performance_opt.html). If [hyper-threading](https://www.xmodulo.com/check-hyper-threading-enabled-linux.html) is activated in the BIOS (not recommended) also the corresponding virtual core has to be isolated. The indices of the second virtual cores follow the physical ones.
 
-You can **isolate the CPUs** by adding the following option (the numbers correspond to the list of CPUs we want to isolate):
+You can **isolate the CPUs** by adding the following option (the numbers correspond to the list of CPUs we want to isolate starting from `0`):
 
 ```shell
-GRUB_CMDLINE_LINUX_DEFAULT=“isolcpus=1-3,5,7”
+GRUB_CMDLINE_LINUX_DEFAULT=“isolcpus=0-3,8-11”
 ```
 
-to `/etc/default/grub` and then update grub with `$ sudo update-grub` and then reboot. Alternatively you can add the option `isolcpus=1-3` to the kernel parameters with the Grub customizer as described above.
+to `/etc/default/grub` and then update grub with `$ sudo update-grub` and then reboot. Alternatively you can add the option `isolcpus=0-1` to the kernel parameters with the Grub customizer as described above. You can then check if the isolation is working correctly by running `$ cat /sys/devices/system/cpu/isolated` and checking the kernel parameters with `$ cat /proc/cmdline`. A good way of verifying this is also to run `$ stress-ng -c $(nproc)` and monitor that none of the stress test processes are spawned on the isolated cores with `$ htop`: If the isolation is working correctly all cores should be fully used while the isolated one should be empty.
 
 Additionally it makes sense to also **isolate the corresponding [hardware interrupts (IRQs)](https://en.wikipedia.org/wiki/Interrupt_request_(PC_architecture))** (on a dedicated CPU), disabling the irqbalance daemon and binding the process to a particular CPU as described [here](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html-single/optimizing_rhel_8_for_real_time_for_low_latency_operation/index#assembly_binding-interrupts-and-processes_optimizing-RHEL8-for-real-time-for-low-latency-operation). This is in particular crucial for applications that include network and EtherCAT communication.
 
