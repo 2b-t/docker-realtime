@@ -25,7 +25,7 @@ One can find a few developer checklists for real-time programming such as [this]
   #include <pthread.h>
   #include <sched.h>
   
-  ::pthread_t const current_thread {::pthread_self()}; // or t.native_handle()
+  ::pthread_t const current_thread {::pthread_self()}; // or t.native_handle() for an std::thread
   int policy {};
   struct ::sched_param param {};
   ::pthread_getschedparam(current_thread, &policy, &param);
