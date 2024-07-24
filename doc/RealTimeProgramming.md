@@ -1,6 +1,6 @@
 # Introduction to Real-time Programming
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (November 2023)
+Author: [Tobit Flatscher](https://github.com/2b-t) (2023 - 2024)
 
 
 
@@ -19,30 +19,60 @@ One can find a few developer checklists for real-time programming such as [this]
   - Select algorithms by their **worst-case latency** and not their average latency
   - **Split your code** into parts that have to be **real-time** and a **non real-time** part
 
-- **Set a priority** (nice values) to your real-time code (see [here](https://medium.com/@chetaniam/a-brief-guide-to-priority-and-nice-values-in-the-linux-ecosystem-fb39e49815e0)). `80` is a good starting point. It is not advised to use too high priorities as this might result in problems with the 
+- **Set a priority** (nice values) to your real-time code (see [here](https://medium.com/@chetaniam/a-brief-guide-to-priority-and-nice-values-in-the-linux-ecosystem-fb39e49815e0)). `80` is a good starting point. It is not advised to use too high priorities as this might result in problems with kernel threads:
 
-  ```c
+  ```c++
   #include <pthread.h>
   #include <sched.h>
   
+  ::pthread_t const current_thread {::pthread_self()}; // or t.native_handle()
   int policy {};
   struct ::sched_param param {};
-  ::pthread_getschedparam(t.native_handle(), &policy, &param);
-  param.sched_priority = 80;
-  ::pthread_setschedparam(t.native_handle(), policy, &param);
+  ::pthread_getschedparam(current_thread, &policy, &param);
+  param.sched_priority = 80; // or use ::sched_get_priority_max(some_policy)
+  if (::pthread_setschedparam(current_thread, policy, &param) == 0) {
+    std::cout << "Set thread priority to '" << param.sched_priority << "'." << std::endl;
+  } else {
+    std::cerr << "Failed to set thread priority to '" << param.sched_priority << "'!" << std::endl;
+  }
   ```
 
 - Set a **scheduling policy** that fits your needs (see [here](https://man7.org/linux/man-pages/man7/sched.7.html)). **`SCHED_FIFO`** is likely the one you want to go for if you do not have a particular reason to do otherwise:
-  ```c
+  ```c++
   #include <pthread.h>
   #include <sched.h>
   
+  ::pthread_t const current_thread {::pthread_self()};
   int policy {};
   struct ::sched_param param {};
-  ::pthread_getschedparam(t.native_handle(), &policy, &param);
+  ::pthread_getschedparam(current_thread, &policy, &param);
   policy = SCHED_FIFO;
-  ::pthread_setschedparam(t.native_handle(), policy, &param);
+  if (::pthread_setschedparam(current_thread, policy, &param) == 0) {
+    std::cout << "Set scheduling policy to '" << policy << "'." << std::endl;
+  } else {
+    std::cerr << "Failed to set scheduling policy to '" << policy << "'!" << std::endl;
+  }
   ```
+  
+- **Pin the thread to an isolated CPU core** (which was previously isolated on the operating system). This way the process does not have to fight over resources with other processes running on the same core.
+
+  ```c++
+  #include <pthread.h>
+  #include <sched.h>
+  
+  constexpr int cpu_core {0};
+  ::pthread_t const current_thread {::pthread_self()};
+  ::cpu_set_t cpuset {};
+  CPU_ZERO(&cpuset);
+  CPU_SET(cpu_core, &cpuset);
+  if (::pthread_setaffinity_np(current_thread, sizeof(::cpu_set_t), &cpuset) == 0) {
+    std::cout << "Set thread affinity to cpu '" << cpu_core << "'!" << std::endl;
+  } else {
+    std::cerr << "Failed to set thread affinity to cpu '" << cpu_core << "'!" << std::endl;
+  }
+  ```
+
+  This can be tested by stressing the system e.g. with `stress-ng`. In a process viewer like `htop` you should see that the unisolated cores will be fully used while the isolated CPU cores should just be running the intended code and should only be partially used:
 
 - Dynamic memory allocation (reserving virtual and physical memory) is slow and so is copying. Both are generally not real-time safe. **Avoid any form of dynamic memory allocation inside real-time code**:
 
