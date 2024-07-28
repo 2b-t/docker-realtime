@@ -1,6 +1,6 @@
 # Ubuntu realtime-kernel/`PREEMPT_RT` set-up
 
-Author: [Tobit Flatscher](https://github.com/2b-t) (August 2021 - February 2023)
+Author: [Tobit Flatscher](https://github.com/2b-t) (2021 - 2024)
 
 ## 1. Setting-up `PREEMPT_RT`
 
@@ -262,7 +262,7 @@ Now it is time to build the kernel:
   $ sudo dpkg -r linux-image-${PREEMPT_RT_VER_FULL}
   ```
   
-  The advantage of the Debian package is that you can distribute and remove it more easily than the direct installation. 
+  The advantage of the Debian package is that you can distribute and remove it more easily than the direct installation. The generation of the debug version might take much longer than the release version. Just be patient!
   
 - Alternatively you can build and **install it directly** without creating a Debian package first
 
@@ -302,9 +302,27 @@ In this context `rtprio` is the maximum real-time priority allowed for non-privi
 
 ### 1.4 Set real-time schedule
 
-The real-time schedule of a process can be set from the command line with `chrt` as discussed [here](https://askubuntu.com/questions/51283/how-to-run-a-program-with-sched-rr-policy-from-command-line).
+The real-time schedule of a process can be set from the command line with `chrt` as discussed [here](https://askubuntu.com/questions/51283/how-to-run-a-program-with-sched-rr-policy-from-command-line) or from within the process as discussed in the [chapter on real-time programming](./RealTimeProgramming.md). For a [systemd service](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html) (for the basics refer also to [this tutorial](https://medium.com/@benmorel/creating-a-linux-service-with-systemd-611b5c8b91d6)) you can either set a priority to the service itself by specifying `CPUSchedulingPolicy=fifo` and `CPUSchedulingPriority=90` as described [here](https://superuser.com/a/403386) or specify a maximum priority that the process can be set to through the parameter `LimitRTPRIO` inside the corresponding service file, e.g. `/etc/systemd/system/my.service`:
 
+```
+[Unit]
+Description=My service
 
+[Service]
+Environment=SOME_VAR=some_value
+ExecStart=./path/to/my/process
+KillMode=process
+KillSignal=SIGINT
+# This allows the process to set the priority from inside the program to this maximum value
+LimitRTPRIO=99
+Type=simple
+User=my_user
+
+[Install]
+WantedBy=multi-user.target
+```
+
+In the case of `LimitRTPRIO` make sure to set the priority and scheduling process from inside the code and check the return values as well as with `htop` to make sure it was set successfully.
 
 ### 1.5 Set boot order
 
