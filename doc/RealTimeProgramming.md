@@ -16,8 +16,8 @@ One can find a few developer checklists for real-time programming such as [this]
 
 - Take care when designing your own code and implementing your own **algorithms**:
 
-  - Select algorithms by their **worst-case latency** and not their average latency
-  - **Split your code** into parts that have to be **real-time** and a **non real-time** part
+  - Select algorithms by their **worst-case run-time** and not their average run-time (see also [here](https://www.cs.odu.edu/~zeil/cs361/latest/Public/averagecase/index.html)). Keep in mind though that these latency are derived from asymptotic analysis for a large number of elements and only up to a constant (which can be quite large): Two O(n) algorithms might be very different in terms of computational speed (number of instructions and CPU cycles taken), just their scaling will be similar and similarly a O(n²) algorithm might be faster for smaller container sizes. Therefore in particular for smaller or fixed size containers it is necessary to benchmark the chosen algorithm. For small containers the cache locality and memory allocation of an algorithm will be far more important than its asymptotic scaling behavior.
+  - **Split your code** into parts that have to be **real-time** and a **non real-time** part and make them communicate with lockless programming techniques
 
 - **Set a priority** (nice values) to your real-time code (see [here](https://medium.com/@chetaniam/a-brief-guide-to-priority-and-nice-values-in-the-linux-ecosystem-fb39e49815e0)). `80` is a good starting point. It is not advised to use too high priorities as this might result in problems with kernel threads:
 
@@ -116,6 +116,8 @@ One can find a few developer checklists for real-time programming such as [this]
 
   - Take care when relying on external libraries to time events and stop times, e.g. [`std::chrono`](https://www.modernescpp.com/index.php/the-three-clocks/).
 
-- Benchmark performance of your code and use tracing library to track you real-time performance. You can always test with simulated load.
+- **Benchmark** performance of your code and use tracing library to track you real-time performance. You can always test with simulated load.
+
+- For network applications that require to communicate over a high-speed NIC look into **kernel-bypass** instead of relying on POSIX sockets (see e.g. [here](https://blog.cloudflare.com/kernel-bypass) and [here](https://medium.com/@penberg/on-kernel-bypass-networking-and-programmable-packet-processing-799609b06898))
 
 A good resource for real-time programming is the book ["Building Low Latency Applications with C++"](https://www.packtpub.com/product/building-low-latency-applications-with-c/9781837639359) as well as [this CppCon 2021 talk](https://www.youtube.com/watch?v=Tof5pRedskI). You might also want to have a look at the following two-part guide for audio-developers ([1](https://www.youtube.com/watch?v=Q0vrQFyAdWI) and [2](https://www.youtube.com/watch?v=PoZAo2Vikbo)).
