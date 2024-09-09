@@ -13,14 +13,14 @@ on:
 
 jobs:
   docker-compose-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - name: Launch the Docker
-        run: docker-compose -f docker/docker-compose.yml up --detach
+        run: docker compose -f docker/docker-compose.yml up --detach
       - name: Run BATS Bash unit-tests
         run: |
           docker exec realtime_docker bash -c '
